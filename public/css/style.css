@@ -1,0 +1,202 @@
+/* 🌙 DETAIL SURAT MASUK - DARK UI STYLE */
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #121622;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+}
+
+/* FLEX WRAPPER */
+.content-wrapper {
+  padding-block: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.row-balanced {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1240px;
+  width: 100%;
+}
+
+/* KARTU */
+.card {
+  background: #1e2a3b;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2c3444;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #0f172a;
+  color: #90caf9;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+.card-footer {
+  background-color: #1c2233;
+  padding: 0.75rem 1rem;
+}
+
+/* PREVIEW ZONE */
+.preview-zone {
+  background-color: #0d111b;
+  padding: 1rem;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-zone img {
+  max-width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.preview-zone iframe {
+  width: 100%;
+  height: 360px;
+  border: none;
+}
+
+/* INFO ZONE */
+.info-zone {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.info-zone dl {
+  margin-bottom: 1rem;
+}
+
+.info-zone dt {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.info-zone dd {
+  margin-bottom: 1rem;
+  color: #f1f1f1;
+}
+
+/* TATA LETAK KARTU */
+.card-custom {
+  flex: 1 1 500px;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* BUTTONS */
+.btn {
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+}
+
+.btn-outline-light {
+  color: #ffffff;
+  border-color: #64b5f6;
+  background-color: transparent;
+}
+
+.btn-outline-light:hover {
+  background-color: #64b5f6;
+  color: #121622;
+  border-color: #64b5f6;
+}
+
+.btn-secondary {
+  background-color: #546e7a;
+  color: #fff;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #37474f;
+}
+
+/* RESPONSIF */
+@media (max-width: 768px) {
+  .card-custom {
+    max-width: 100%;
+  }
+
+  .info-zone {
+    padding: 1rem;
+  }
+
+  .card-header {
+    font-size: 1rem;
+  }
+
+  .preview-zone iframe,
+  .preview-zone img {
+    max-height: 300px;
+  }
+}
+
+/* 🆙 UPPERCASE TEXT IN TABLE CELLS */
+.table td,
+.table th {
+  text-transform: uppercase;
+}
+
+/* 🧵 Potong teks panjang agar tidak turun ke bawah */
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+/* ✨ Tooltip Custom Style */
+.tooltip-inner {
+  background-color: #64b5f6;
+  color: #121622;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  max-width: 240px;
+  text-align: center;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow {
+  border-top-color: #64b5f6;
+}
+.tooltip.bs-tooltip-bottom .tooltip-arrow {
+  border-bottom-color: #64b5f6;
+}
+.tooltip.bs-tooltip-start .tooltip-arrow {
+  border-left-color: #64b5f6;
+}
+.tooltip.bs-tooltip-end .tooltip-arrow {
+  border-right-color: #64b5f6;
+}
