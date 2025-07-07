@@ -20,8 +20,8 @@ class SuratMasuk extends BaseController
 
         if ($keyword) {
             $builder->like('nomor_surat', $keyword)
-                ->orLike('pengirim', $keyword)
-                ->orLike('perihal', $keyword);
+                    ->orLike('pengirim', $keyword)
+                    ->orLike('perihal', $keyword);
         }
 
         $data['surat'] = $builder->orderBy('tanggal_terima', 'DESC')->findAll();
@@ -29,6 +29,7 @@ class SuratMasuk extends BaseController
 
         return view('suratmasuk/index', $data);
     }
+
     public function create()
     {
         return view('suratmasuk/create');
@@ -50,12 +51,10 @@ class SuratMasuk extends BaseController
             return redirect()->back()->withInput()->with('error', $validation->listErrors());
         }
 
-        // Handle upload
         $file = $this->request->getFile('file_surat');
         $fileName = $file->getRandomName();
         $file->move('uploads', $fileName);
 
-        // Simpan ke database
         $this->suratMasuk->save([
             'nomor_surat'    => $this->request->getPost('nomor_surat'),
             'pengirim'       => $this->request->getPost('pengirim'),
@@ -66,6 +65,7 @@ class SuratMasuk extends BaseController
 
         return redirect()->to('suratmasuk')->with('success', 'Data berhasil disimpan.');
     }
+
     public function detail($id)
     {
         $surat = $this->suratMasuk->find($id);
@@ -75,6 +75,7 @@ class SuratMasuk extends BaseController
 
         return view('suratmasuk/detail', ['surat' => $surat]);
     }
+
     public function edit($id)
     {
         $surat = $this->suratMasuk->find($id);
@@ -88,10 +89,10 @@ class SuratMasuk extends BaseController
     public function update($id)
     {
         $rules = [
-            'nomor_surat' => 'required',
-            'pengirim'    => 'required',
+            'nomor_surat'    => 'required',
+            'pengirim'       => 'required',
             'tanggal_terima' => 'required|valid_date',
-            'perihal'     => 'required',
+            'perihal'        => 'required',
         ];
 
         if (!$this->validate($rules)) {
@@ -99,10 +100,10 @@ class SuratMasuk extends BaseController
         }
 
         $data = [
-            'nomor_surat' => $this->request->getPost('nomor_surat'),
-            'pengirim'    => $this->request->getPost('pengirim'),
+            'nomor_surat'    => $this->request->getPost('nomor_surat'),
+            'pengirim'       => $this->request->getPost('pengirim'),
             'tanggal_terima' => $this->request->getPost('tanggal_terima'),
-            'perihal'     => $this->request->getPost('perihal'),
+            'perihal'        => $this->request->getPost('perihal'),
         ];
 
         $file = $this->request->getFile('file_surat');
@@ -113,24 +114,25 @@ class SuratMasuk extends BaseController
         }
 
         $this->suratMasuk->update($id, $data);
-        return redirect()->to('suratmasuk')->with('success', 'Data berhasil diupdate');
+        return redirect()->to('suratmasuk')->with('success', 'Data berhasil diupdate.');
     }
+
     public function delete($id)
     {
         $surat = $this->suratMasuk->find($id);
         if ($surat) {
-            // Hapus file surat dari folder uploads
             if (!empty($surat['file_surat']) && file_exists('uploads/' . $surat['file_surat'])) {
                 unlink('uploads/' . $surat['file_surat']);
             }
 
-            // Hapus data dari database
             $this->suratMasuk->delete($id);
-            return redirect()->to('suratmasuk')->with('success', 'Data berhasil dihapus');
+            return redirect()->to('suratmasuk')->with('success', 'Data berhasil dihapus.');
         }
 
-        return redirect()->to('suratmasuk')->with('error', 'Data tidak ditemukan');
+        return redirect()->to('suratmasuk')->with('error', 'Data tidak ditemukan.');
     }
+
+    // Uncomment jika perlu bersihkan file yang tidak terpakai
     // public function cleanup()
     // {
     //     $files = scandir('uploads/');

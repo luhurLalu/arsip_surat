@@ -51,6 +51,14 @@
     .navbar-brand img {
       object-fit: cover;
     }
+
+    /* 🪄 Toast overlay agar tampil tanpa ganggu layout */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1200;
+    }
   </style>
 </head>
 <body>
@@ -107,6 +115,11 @@
   <main class="container">
     <?= $this->renderSection('content') ?>
   </main>
+
+  <!-- 🍞 Container Toast -->
+  <div class="toast-container">
+    <?= $this->renderSection('toast') ?>
+  </div>
 
   <!-- Bootstrap JS & Tooltip Activation -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

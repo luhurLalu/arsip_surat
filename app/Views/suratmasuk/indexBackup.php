@@ -33,15 +33,23 @@
         </a>
     </div>
 
-    <!-- 🔍 Live Search & Pagination -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-        <div class="input-group" style="flex: 1 1 auto; max-width: 500px;">
-            <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, pengirim, atau perihal...">
+    <!-- 🔔 Flash Message dengan styling lengkap -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i><?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
-        <nav>
-            <ul class="pagination mb-0" id="paginationControls"></ul>
-        </nav>
+    <?php elseif (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i><?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+        </div>
+    <?php endif ?>
+
+    <!-- 🔍 Live Search -->
+    <div class="input-group mb-3" style="max-width: 500px;">
+        <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, pengirim, atau perihal...">
     </div>
 
     <!-- 📝 Tabel Surat Masuk -->
@@ -66,21 +74,21 @@
                 $no = 1;
                 foreach ($surat as $s):
                 ?>
-                    <tr class="paginated">
+                    <tr>
                         <td class="text-center"><?= $no++ ?></td>
                         <td style="max-width:160px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>">
+                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['nomor_surat']) ?>">
                                 <?= esc($s['nomor_surat']) ?>
                             </span>
                         </td>
                         <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['pengirim']) ?>">
+                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['pengirim']) ?>">
                                 <?= esc($s['pengirim']) ?>
                             </span>
                         </td>
                         <td class="text-center"><?= esc($s['tanggal_terima']) ?></td>
                         <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>">
+                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['perihal']) ?>">
                                 <?= esc($s['perihal']) ?>
                             </span>
                         </td>
@@ -91,6 +99,7 @@
                                 <a href="<?= base_url('uploads/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
                                 <button class="btn btn-danger btn-sm text-white" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $s['id'] ?>"><i class="bi bi-trash-fill"></i></button>
                             </div>
+
                             <!-- 🧨 Modal Hapus -->
                             <div class="modal fade" id="modalHapus<?= $s['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $s['id'] ?>" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -120,83 +129,51 @@
         </table>
     </div>
 </div>
-<!-- 🔍 Script Search + Pagination + Tooltip -->
-<script>
-    const rows = document.querySelectorAll("#suratTable tbody tr");
-    const rowsPerPage = 7;
-    let currentPage = 1;
 
-    function filterRows() {
-        const keyword = document.getElementById("searchInput").value.toLowerCase();
+<!-- 🔍 Script Search + Tooltip Bootstrap -->
+<script>
+    document.getElementById("searchInput").addEventListener("input", function() {
+        this.value = this.value.toUpperCase();
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#suratTable tbody tr");
+
         rows.forEach(row => {
             const text = row.innerText.toLowerCase();
-            row.dataset.visible = text.includes(keyword) ? "true" : "false";
+            row.style.display = text.includes(keyword) ? "" : "none";
         });
-    }
-
-    function showPage(page) {
-        currentPage = page;
-        const visibleRows = Array.from(rows).filter(row => row.dataset.visible !== "false");
-        visibleRows.forEach((row, i) => {
-            row.style.display = (i >= (page - 1) * rowsPerPage && i < page * rowsPerPage) ? "" : "none";
-        });
-        renderPagination(visibleRows.length);
-    }
-
-    function renderPagination(totalVisible) {
-        const totalPages = Math.ceil(totalVisible / rowsPerPage);
-        const container = document.getElementById("paginationControls");
-        container.innerHTML = "";
-
-        const prev = document.createElement("li");
-        prev.className = "page-item" + (currentPage === 1 ? " disabled" : "");
-        prev.innerHTML = `<button class="page-link">«</button>`;
-        prev.querySelector("button").onclick = () => showPage(currentPage - 1);
-        container.appendChild(prev);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement("li");
-            li.className = "page-item" + (i === currentPage ? " active" : "");
-            li.innerHTML = `<button class="page-link">${i}</button>`;
-            li.querySelector("button").onclick = () => showPage(i);
-            container.appendChild(li);
-        }
-
-        const next = document.createElement("li");
-        next.className = "page-item" + (currentPage === totalPages ? " disabled" : "");
-        next.innerHTML = `<button class="page-link">»</button>`;
-        next.querySelector("button").onclick = () => showPage(currentPage + 1);
-        container.appendChild(next);
-    }
-
-    document.getElementById("searchInput").addEventListener("input", () => {
-        filterRows();
-        showPage(1);
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        filterRows();
-        showPage(1);
-
+    document.addEventListener("DOMContentLoaded", function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+        tooltipTriggerList.forEach(function(el) {
+            new bootstrap.Tooltip(el, {
+                animation: true,
+                html: false
+            });
+        });
     });
 </script>
 
 <!-- 🎯 Tiga Tips Tambahan -->
 <script>
+    // 1️⃣ Auto scroll ke flash message setelah muncul
     const flash = document.querySelector('.alert');
-    if (flash) flash.scrollIntoView({
-        behavior: 'smooth'
-    });
+    if (flash) {
+        flash.scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
 
+    // 2️⃣ Timeout otomatis untuk menutup alert (opsional)
     setTimeout(() => {
-        document.querySelectorAll('.alert-dismissible').forEach(alert => {
+        const alert = document.querySelector('.alert-dismissible');
+        if (alert) {
             alert.classList.remove('show');
             alert.classList.add('fade');
-        });
-    }, 5000);
+        }
+    }, 5000); // 5 detik
 
+    // 3️⃣ Tambahkan animasi pop efek saat alert muncul
     document.querySelectorAll('.alert').forEach(el => {
         el.style.animation = "popIn 0.5s ease";
     });
@@ -217,12 +194,11 @@
     }
 </style>
 
-<!-- Toast auto-dismiss -->
 <script>
     setTimeout(() => {
         const toasts = document.querySelectorAll('.toast');
         toasts.forEach(toast => toast.classList.remove('show'));
-    }, 4000);
+    }, 4000); // Auto dismiss dalam 4 detik
 </script>
 
 <?= $this->endSection() ?>
