@@ -1,71 +1,6 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-
-<!-- Flatpickr CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-
-<style>
-  input[type="text"],
-  textarea {
-    text-transform: uppercase;
-  }
-
-  .form-dark input,
-  .form-dark select,
-  .form-dark textarea {
-    background-color: #1e212d;
-    border: 1px solid #495057;
-    color: white;
-    min-height: 44px;
-  }
-
-  .form-dark input:focus,
-  .form-dark textarea:focus,
-  .form-dark select:focus {
-    border-color: #0dcaf0;
-    box-shadow: 0 0 0 0.15rem rgba(13, 202, 240, 0.25);
-    background-color: #212531;
-    color: white;
-  }
-
-  .form-label {
-    color: #aeb6c1;
-    font-weight: 500;
-  }
-
-  .btn-sm {
-    padding: 6px 14px;
-  }
-
-  .btn-info.text-dark {
-    background-color: #0dcaf0;
-    border: none;
-  }
-
-  .btn-info.text-dark:hover {
-    background-color: #31d2f2;
-  }
-
-  .btn-secondary {
-    background-color: #6c757d;
-    border: none;
-  }
-
-  .btn-secondary:hover {
-    background-color: #5a6268;
-  }
-
-  #filePreview {
-    color: #0dcaf0;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-</style>
-
+<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 <div class="container py-4">
   <h4 class="text-white mb-4">
     <i class="bi bi-pencil-square text-warning"></i> Edit Surat Keluar
@@ -77,27 +12,27 @@
 
   <form action="<?= base_url('suratkeluar/update/' . $surat['id']) ?>" method="post" enctype="multipart/form-data" class="form-dark">
     <?= csrf_field() ?>
-    <input type="hidden" name="old_file" value="<?= esc($surat['file_surat']) ?>">
+    <input type="hidden" name="old_file" id="old_file" value="<?= old('old_file', esc($surat['file_surat'])) ?>">
 
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="nomor_surat" class="form-label">Nomor Surat</label>
-        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" value="<?= esc($surat['nomor_surat']) ?>" readonly required>
+        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" value="<?= old('nomor_surat', esc($surat['nomor_surat'])) ?>" readonly required>
       </div>
       <div class="col-md-6">
         <label for="tujuan" class="form-label">Tujuan</label>
-        <input type="text" name="tujuan" id="tujuan" class="form-control" value="<?= esc($surat['tujuan']) ?>" required>
+        <input type="text" name="tujuan" id="tujuan" class="form-control" value="<?= old('tujuan', esc($surat['tujuan'])) ?>" required>
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="tanggal_kirim" class="form-label">Tanggal Kirim</label>
-        <input type="text" name="tanggal_kirim" id="tanggal_kirim" class="form-control" value="<?= esc($surat['tanggal_kirim']) ?>" required>
+        <input type="text" name="tanggal_kirim" id="tanggal_kirim" class="form-control" value="<?= old('tanggal_kirim', esc($surat['tanggal_kirim'])) ?>" required>
       </div>
       <div class="col-md-6">
         <label for="perihal" class="form-label">Perihal</label>
-        <input type="text" name="perihal" id="perihal" class="form-control" value="<?= esc($surat['perihal']) ?>" required>
+        <input type="text" name="perihal" id="perihal" class="form-control" value="<?= old('perihal', esc($surat['perihal'])) ?>" required>
       </div>
     </div>
 
@@ -106,7 +41,7 @@
       <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx">
       <?php if ($surat['file_surat']): ?>
         <div class="form-text text-light mt-1">
-          File lama: <a href="<?= base_url('uploads/' . $surat['file_surat']) ?>" target="_blank" class="text-info">Lihat File</a>
+          File lama: <a href="<?= base_url('uploads/suratkeluar/' . $surat['file_surat']) ?>" target="_blank" class="text-info">Lihat File</a>
         </div>
       <?php endif ?>
       <div id="filePreview"></div>
@@ -121,14 +56,15 @@
   </form>
 </div>
 
-<!-- Flatpickr + Preview Dinamis -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-  flatpickr("#tanggal_kirim", {
-    dateFormat: "Y-m-d",
-    altInput: true,
-    altFormat: "l, d F Y",
-    allowInput: true
+  document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#tanggal_kirim", {
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "l, d F Y",
+      allowInput: true,
+      defaultDate: document.getElementById('tanggal_kirim').value
+    });
   });
 
   const inputFile = document.getElementById("file_surat");

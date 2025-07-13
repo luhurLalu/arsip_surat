@@ -1,102 +1,104 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
 <div class="container mt-3">
-
-    <!-- 🧭 Header & Tombol Tambah -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-        <h2 class="m-0 text-light fw-bold" style="font-size: 1.8rem; font-family: 'Poppins', sans-serif;">📤 Arsip Surat Keluar</h2>
-        <a href="<?= base_url('suratkeluar/create') ?>" class="btn btn-primary mt-2 mt-md-0">
-            <i class="bi bi-plus-circle"></i> Tambah Surat
-        </a>
+    <!-- ✅ Toast Notification -->
+    <div class="position-fixed top-0 end-0 p-3 toast-z">
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-check-circle-fill me-2"></i><?= session()->getFlashdata('success') ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php elseif (session()->getFlashdata('error')): ?>
+            <div class="toast align-items-center text-white bg-danger border-0 show" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i><?= session()->getFlashdata('error') ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php endif ?>
     </div>
 
-    <!-- 🔔 Flash Message -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
-    <?php elseif (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-    <?php endif ?>
+    <!-- 🧭 Header Surat Keluar -->
+    <div class="mb-3">
+        <h2 class="m-0 text-light fw-bold heading-poppins">📤 Arsip Surat Keluar</h2>
+    </div>
 
     <!-- 🔍 Live Search & Pagination -->
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-        <div class="input-group" style="flex: 1 1 auto; max-width: 500px;">
+        <div class="input-group search-group">
             <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, tujuan, atau perihal...">
         </div>
-        <ul class="pagination mb-0" id="pagination"></ul>
+        <nav>
+            <ul class="pagination mb-0" id="paginationControls"></ul>
+        </nav>
+    </div>
+
+    <!-- 🔔 Pesan jika tidak ditemukan -->
+    <div id="noResultMessage" class="text-center text-warning fw-bold my-3 d-none">
+        🔍 Data tidak ditemukan.
     </div>
 
     <!-- 📝 Tabel Surat Keluar -->
-    <div class="table-responsive mt-2">
+    <div class="table-responsive">
         <table class="table table-dark table-bordered table-hover align-middle" id="suratTable">
             <thead class="table-light text-center">
                 <tr>
-                    <th style="width: 40px;">No</th>
-                    <th style="width: 160px;">Nomor Surat</th>
-                    <th style="width: 180px;">Tujuan</th>
-                    <th style="width: 140px;">Tanggal Kirim</th>
-                    <th style="width: 180px;">Perihal</th>
-                    <th style="width: 210px;">Aksi</th>
+                    <th class="col-no">No</th>
+                    <th class="col-nomor">Nomor Surat</th>
+                    <th class="col-tujuan">Tujuan</th>
+                    <th class="col-tanggal">Tanggal Kirim</th>
+                    <th class="col-perihal">Perihal</th>
+                    <th class="col-aksi">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                    // 🔁 Urutkan berdasarkan tanggal terbaru
-                    usort($surat, function($a, $b) {
-                        return strtotime($b['tanggal_kirim']) <=> strtotime($a['tanggal_kirim']);
-                    });
-
-                    $no = 1;
-                    foreach ($surat as $s):
-                ?>
+                usort($suratkeluar, fn($a, $b) => strtotime($b['tanggal_kirim']) <=> strtotime($a['tanggal_kirim']));
+                $no = 1;
+                foreach ($suratkeluar as $s): ?>
                     <tr class="paginated">
                         <td class="text-center"><?= $no++ ?></td>
-                        <td style="max-width:160px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['nomor_surat']) ?>">
-                                <?= esc($s['nomor_surat']) ?>
-                            </span>
+                        <td class="col-nomor">
+                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>"><?= esc($s['nomor_surat']) ?></span>
                         </td>
-                        <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['tujuan']) ?>">
-                                <?= esc($s['tujuan']) ?>
-                            </span>
+                        <td class="col-tujuan">
+                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan']) ?>"><?= esc($s['tujuan']) ?></span>
                         </td>
                         <td class="text-center"><?= esc($s['tanggal_kirim']) ?></td>
-                        <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= esc($s['perihal']) ?>">
-                                <?= esc($s['perihal']) ?>
-                            </span>
+                        <td class="col-perihal">
+                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>"><?= esc($s['perihal']) ?></span>
                         </td>
                         <td class="text-center text-nowrap">
                             <div class="d-flex justify-content-center flex-wrap gap-1">
                                 <a href="<?= base_url('suratkeluar/detail/' . $s['id']) ?>" class="btn btn-info btn-sm text-white"><i class="bi bi-eye-fill"></i></a>
-                                <a href="<?= base_url('suratkeluar/edit/' . $s['id']) ?>" class="btn btn-warning btn-sm text-dark"><i class="bi bi-pencil-fill"></i></a>
-                                <a href="<?= base_url('uploads/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
-                                <button class="btn btn-danger btn-sm text-white" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $s['id'] ?>"><i class="bi bi-trash-fill"></i></button>
-                            </div>
-
-                            <!-- 🧨 Modal Hapus -->
-                            <div class="modal fade" id="modalHapus<?= $s['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $s['id'] ?>" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content bg-dark text-white border-danger">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modalLabel<?= $s['id'] ?>">Konfirmasi Hapus</h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            🗑️ Hapus surat ke <strong><?= esc($s['tujuan']) ?></strong>?<br>
-                                            Nomor: <strong><?= esc($s['nomor_surat']) ?></strong>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form action="<?= base_url('suratkeluar/delete/' . $s['id']) ?>" method="post">
-                                                <?= csrf_field() ?>
-                                                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <a href="#" class="btn btn-warning btn-sm text-dark btn-edit-suratkeluar"
+                                   data-id="<?= $s['id'] ?>"
+                                   data-nomor="<?= esc($s['nomor_surat']) ?>"
+                                   data-tujuan="<?= esc($s['tujuan']) ?>"
+                                   data-tanggal="<?= esc($s['tanggal_kirim']) ?>"
+                                   data-perihal="<?= esc($s['perihal']) ?>"
+                                   data-file="<?= esc($s['file_surat']) ?>"
+                                   data-bs-toggle="modal" data-bs-target="#modalEditSuratKeluar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="<?= base_url('uploads/suratkeluar/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
+                                <button class="btn btn-danger btn-sm text-white btn-hapus-suratkeluar"
+                                    data-id="<?= $s['id'] ?>"
+                                    data-tujuan="<?= esc($s['tujuan']) ?>"
+                                    data-nomor="<?= esc($s['nomor_surat']) ?>"
+                                    data-action="<?= base_url('suratkeluar/delete/' . $s['id']) ?>"
+                                    data-bs-toggle="modal" data-bs-target="#modalHapusSuratKeluar">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -106,50 +108,56 @@
     </div>
 </div>
 
-<!-- 🔍 Script Search + Pagination + Tooltip -->
+
+
+<!-- 📝 Modal Edit Surat Keluar -->
+<?= view('suratkeluar/modal_edit') ?>
+
+<!-- 🧨 Modal Hapus GLOBAL -->
+<div class="modal fade" id="modalHapusSuratKeluar" tabindex="-1" aria-labelledby="modalHapusSuratKeluarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-danger">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHapusSuratKeluarLabel">Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="hapusKeluarModalBody">
+        <!-- Diisi dinamis oleh JS -->
+      </div>
+      <div class="modal-footer">
+        <form id="formHapusSuratKeluar" action="#" method="post">
+          <?= csrf_field() ?>
+          <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔌 Panggil JS modular -->
+
 <script>
-    document.getElementById("searchInput").addEventListener("input", function() {
-        this.value = this.value.toUpperCase();
-        const keyword = this.value.toLowerCase();
-        const rows = document.querySelectorAll("#suratTable tbody tr");
+    // Script untuk mengisi konten modal hapus surat keluar
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalHapus = document.getElementById('modalHapusSuratKeluar');
+        modalHapus.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Tombol yang memicu modal
+            const id = button.getAttribute('data-id');
+            const tujuan = button.getAttribute('data-tujuan');
+            const nomor = button.getAttribute('data-nomor');
+            const actionUrl = button.getAttribute('data-action');
 
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(keyword) ? "" : "none";
-        });
-    });
+            // Update konten modal
+            const modalBody = document.getElementById('hapusKeluarModalBody');
+            modalBody.innerHTML = `
+                🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>
+                Nomor: <strong>${nomor}</strong>
+            `;
 
-    const rows = document.querySelectorAll(".paginated");
-    const rowsPerPage = 7;
-    const totalPages = Math.ceil(rows.length / rowsPerPage);
-    const pagination = document.getElementById("pagination");
-    let currentPage = 1;
-
-    function showPage(page) {
-        currentPage = page;
-        rows.forEach((row, i) => {
-            row.style.display = (i >= (page - 1) * rowsPerPage && i < page * rowsPerPage) ? "" : "none";
-        });
-
-        pagination.innerHTML = "";
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("li");
-            btn.className = "page-item" + (i === page ? " active" : "");
-            btn.innerHTML = `<button class="page-link">${i}</button>`;
-            btn.addEventListener("click", () => showPage(i));
-            pagination.appendChild(btn);
-        }
-    }
-
-    showPage(currentPage);
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(function (el) {
-            new bootstrap.Tooltip(el, {
-                animation: true,
-                html: false
-            });
+            // Update action form
+            const formHapus = document.getElementById('formHapusSuratKeluar');
+            formHapus.setAttribute('action', actionUrl);
         });
     });
 </script>

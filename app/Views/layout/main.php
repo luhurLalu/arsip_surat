@@ -2,15 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Arsip Surat</title>
+  <title>E-ARSIP | KEMENAG KLU<?= $this->renderSection('title') ? ' | ' . $this->renderSection('title') : '' ?></title>
 
   <!-- Bootstrap CSS -->
+  <link rel="icon" type="image/png" href="<?= base_url('images/Logo.png') ?>">
+  <!--
+    OPTIMALISASI:
+    - Pastikan file css/style.css dan js/index.js sudah di-minify untuk produksi.
+    - Aktifkan cache control untuk asset statis (gambar, css, js) di konfigurasi web server (misal .htaccess atau nginx conf).
+    - Untuk data surat yang sangat banyak, gunakan paginasi server-side (bukan hanya JS) agar load lebih ringan.
+  -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
-  <!-- Custom CSS -->
+  <!-- Flatpickr CSS (before custom CSS for override) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+  <!-- Custom CSS (after vendor CSS for easy override) -->
   <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
   <!-- Style Pendukung Layout -->
@@ -22,7 +32,6 @@
       box-sizing: border-box;
       background-color: #1e1e2f;
       color: white;
-      overflow: hidden;
     }
 
     body {
@@ -32,20 +41,33 @@
 
     main.container {
       flex: 1;
-      height: 100%;
+      height: auto; /* Ubah dari 100% ke auto agar modal tidak tertindih tabel */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow: hidden;
+      overflow: visible; /* Ubah dari hidden ke visible agar modal tidak tertindih */
       padding-top: 1rem;
       padding-bottom: 1rem;
     }
 
     .brand-font {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
+      font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #42a5f5 10%, #00bcd4 60%, #66bb6a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* Remove text-fill-color for better compatibility */
+      text-shadow:
+        0 1px 2px rgba(30,33,45,0.18),
+        0 0 0.5px #fff,
+        0 0 1px #2196f3;
+      filter: none;
+      border-radius: 2px;
+      padding-inline: 2px;
+      transition: background 0.4s, text-shadow 0.4s;
     }
 
     .navbar-brand img {
@@ -59,14 +81,26 @@
       right: 1rem;
       z-index: 1200;
     }
+
+    /* Navbar active tab color match Surat Masuk dashboard (#81d4fa) */
+    .navbar-nav .nav-link.active, .navbar-nav .nav-link.active:focus, .navbar-nav .nav-link.active:hover {
+      color: #81d4fa !important;
+      font-weight: 700;
+      background: none !important;
+      border-bottom: 2.5px solid #81d4fa;
+      border-radius: 0;
+      box-shadow: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s, border-bottom 0.2s;
+    }
   </style>
 </head>
-<body>
+<body<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' class="dashboard-page"' : '' ?>>
 
   <!-- 🔷 Logo + Judul -->
   <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="<?= base_url('/') ?>">
+    <div class="container-fluid justify-content-center d-flex">
+      <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
         <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
         <span class="brand-font text-primary">E-ARSIP KEMENAG KLU</span>
       </a>
@@ -83,7 +117,7 @@
       <div class="collapse navbar-collapse" id="arsipNavbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link<?= service('uri')->getSegment(1) === 'dashboard' ? ' active' : '' ?>" href="/">
+            <a class="nav-link<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' active' : '' ?>" href="<?= base_url('/') ?>">
               <i class="bi bi-speedometer2"></i> Dashboard
             </a>
           </li>
@@ -121,10 +155,15 @@
     <?= $this->renderSection('toast') ?>
   </div>
 
-  <!-- Bootstrap JS & Tooltip Activation -->
+  <!-- Bootstrap JS (always before custom JS) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Flatpickr JS (before custom JS that uses it) -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Section for custom/global JS -->
+  <script src="<?= base_url('js/index.js') ?>"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Enable Bootstrap tooltips
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       tooltipTriggerList.forEach(function (el) {
         new bootstrap.Tooltip(el, {
@@ -134,5 +173,7 @@
       });
     });
   </script>
+  <!-- Section for page-specific scripts -->
+  <?= $this->renderSection('scripts') ?>
 </body>
 </html>

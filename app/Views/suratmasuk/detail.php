@@ -28,74 +28,7 @@ function tanggal_indo($datetime) {
 }
 ?>
 
-<style>
-  .content-wrapper {
-    padding-block: 32px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .row-balanced {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    max-width: 1240px;
-    width: 100%;
-  }
-
-  .card-custom {
-    flex: 1 1 500px;
-    max-width: 580px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .preview-zone {
-    background-color: #0d111b;
-    padding: 1rem;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .preview-zone img {
-    max-width: 100%;
-    max-height: 360px;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-  }
-
-  iframe {
-    width: 100%;
-    height: 360px;
-    border: none;
-  }
-
-  .info-zone {
-    padding: 1.5rem;
-    flex-grow: 1;
-    background-color: #0d111b;
-    color: white;
-  }
-
-  .info-zone dt {
-    color: #ced4da;
-  }
-
-  @media (max-width: 768px) {
-    .card-custom {
-      max-width: 100%;
-    }
-
-    .preview-zone img, iframe {
-      max-height: 300px;
-    }
-  }
-</style>
+<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
 <div class="content-wrapper">
   <div class="row-balanced">
@@ -113,19 +46,19 @@ function tanggal_indo($datetime) {
         <?php if (!$file): ?>
           <p class="text-muted text-center py-5">📭 File belum tersedia</p>
         <?php elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
-          <img src="<?= base_url('uploads/' . $file) ?>" alt="Preview Gambar">
+          <img src="<?= base_url('uploads/suratmasuk/' . $file) ?>" alt="Preview Gambar">
         <?php elseif ($ext === 'pdf'): ?>
           <iframe src="<?= $fileUrl ?>" title="Preview PDF"></iframe>
         <?php else: ?>
           <div class="text-center py-4 text-warning">
             <p><strong><?= strtoupper($ext) ?></strong> tidak bisa dipreview langsung</p>
-            <a href="<?= base_url('uploads/' . $file) ?>" class="btn btn-outline-light btn-sm">📥 Download File</a>
+            <a href="<?= base_url('uploads/suratmasuk/' . $file) ?>" class="btn btn-outline-light btn-sm">📥 Download File</a>
           </div>
         <?php endif ?>
       </div>
       <?php if ($file): ?>
         <div class="card-footer text-end bg-dark">
-          <a href="<?= base_url('uploads/' . $file) ?>" target="_blank" class="btn btn-outline-light btn-sm">
+          <a href="<?= base_url('uploads/suratmasuk/' . $file) ?>" target="_blank" class="btn btn-outline-light btn-sm">
             🔗 Buka di Tab Baru
           </a>
         </div>
@@ -164,7 +97,7 @@ function tanggal_indo($datetime) {
         <div class="d-flex justify-content-between border-top pt-3 mt-auto">
           <a href="<?= base_url('suratmasuk') ?>" class="btn btn-secondary btn-sm">← Kembali</a>
           <?php if ($file): ?>
-            <a href="<?= base_url('uploads/' . $file) ?>" class="btn btn-outline-light btn-sm">📥 Download</a>
+            <a href="<?= base_url('uploads/suratmasuk/' . $file) ?>" class="btn btn-outline-light btn-sm">📥 Download</a>
           <?php endif ?>
         </div>
       </div>

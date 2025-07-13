@@ -7,12 +7,16 @@ class Preview extends Controller
 {
     public function file($filename)
     {
-        $filepath = WRITEPATH . '../public/uploads/' . $filename;
-
-        if (!file_exists($filepath)) {
+        // Cek di suratmasuk dulu
+        $filepathMasuk = FCPATH . 'uploads/suratmasuk/' . $filename;
+        $filepathKeluar = FCPATH . 'uploads/suratkeluar/' . $filename;
+        if (file_exists($filepathMasuk)) {
+            $filepath = $filepathMasuk;
+        } elseif (file_exists($filepathKeluar)) {
+            $filepath = $filepathKeluar;
+        } else {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('File tidak ditemukan');
         }
-
         $mime = mime_content_type($filepath);
         $response = service('response');
         return $response

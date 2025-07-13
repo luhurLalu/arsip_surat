@@ -1,41 +1,39 @@
+
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
 <div class="container mt-3">
     <!-- ✅ Toast Notification -->
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    <div class="position-fixed top-0 end-0 p-3 toast-z">
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
                 <div class="d-flex">
                     <div class="toast-body">
                         <i class="bi bi-check-circle-fill me-2"></i><?= session()->getFlashdata('success') ?>
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Tutup"></button>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
             </div>
         <?php elseif (session()->getFlashdata('error')): ?>
-            <div class="toast align-items-center text-white bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast align-items-center text-white bg-danger border-0 show" role="alert">
                 <div class="d-flex">
                     <div class="toast-body">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i><?= session()->getFlashdata('error') ?>
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Tutup"></button>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
             </div>
         <?php endif ?>
     </div>
 
-    <!-- 🧭 Header & Tombol Tambah -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-        <h2 class="m-0 text-light fw-bold" style="font-size: 1.8rem; font-family: 'Poppins', sans-serif;">📥 Arsip Surat Masuk</h2>
-        <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-primary mt-2 mt-md-0">
-            <i class="bi bi-plus-circle"></i> Tambah Surat
-        </a>
+    <!-- 🧭 Header Surat Masuk -->
+    <div class="mb-3">
+        <h2 class="m-0 text-light fw-bold heading-poppins">📥 Arsip Surat Masuk</h2>
     </div>
 
     <!-- 🔍 Live Search & Pagination -->
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-        <div class="input-group" style="flex: 1 1 auto; max-width: 500px;">
+        <div class="input-group search-group">
             <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, pengirim, atau perihal...">
         </div>
@@ -44,185 +42,123 @@
         </nav>
     </div>
 
+    <!-- 🔔 Pesan jika tidak ditemukan -->
+    <div id="noResultMessage" class="text-center text-warning fw-bold my-3 d-none">
+        🔍 Data tidak ditemukan.
+    </div>
+
     <!-- 📝 Tabel Surat Masuk -->
     <div class="table-responsive">
         <table class="table table-dark table-bordered table-hover align-middle" id="suratTable">
             <thead class="table-light text-center">
                 <tr>
-                    <th style="width: 40px;">No</th>
-                    <th style="width: 160px;">Nomor Surat</th>
-                    <th style="width: 180px;">Pengirim</th>
-                    <th style="width: 140px;">Tanggal Terima</th>
-                    <th style="width: 180px;">Perihal</th>
-                    <th style="width: 210px;">Aksi</th>
+                    <th class="col-no">No</th>
+                    <th class="col-nomor">Nomor Surat</th>
+                    <th class="col-pengirim">Pengirim</th>
+                    <th class="col-tanggal">Tanggal Terima</th>
+                    <th class="col-perihal">Perihal</th>
+                    <th class="col-aksi">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                usort($surat, function ($a, $b) {
-                    return strtotime($b['tanggal_terima']) <=> strtotime($a['tanggal_terima']);
-                });
-
                 $no = 1;
-                foreach ($surat as $s):
-                ?>
-                    <tr class="paginated">
-                        <td class="text-center"><?= $no++ ?></td>
-                        <td style="max-width:160px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>">
-                                <?= esc($s['nomor_surat']) ?>
-                            </span>
-                        </td>
-                        <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['pengirim']) ?>">
-                                <?= esc($s['pengirim']) ?>
-                            </span>
-                        </td>
-                        <td class="text-center"><?= esc($s['tanggal_terima']) ?></td>
-                        <td style="max-width:180px;">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>">
-                                <?= esc($s['perihal']) ?>
-                            </span>
-                        </td>
-                        <td class="text-center text-nowrap">
-                            <div class="d-flex justify-content-center flex-wrap gap-1">
-                                <a href="<?= base_url('suratmasuk/detail/' . $s['id']) ?>" class="btn btn-info btn-sm text-white"><i class="bi bi-eye-fill"></i></a>
-                                <a href="<?= base_url('suratmasuk/edit/' . $s['id']) ?>" class="btn btn-warning btn-sm text-dark"><i class="bi bi-pencil-fill"></i></a>
-                                <a href="<?= base_url('uploads/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
-                                <button class="btn btn-danger btn-sm text-white" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $s['id'] ?>"><i class="bi bi-trash-fill"></i></button>
-                            </div>
-                            <!-- 🧨 Modal Hapus -->
-                            <div class="modal fade" id="modalHapus<?= $s['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $s['id'] ?>" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content bg-dark text-white border-danger">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modalLabel<?= $s['id'] ?>">Konfirmasi Hapus</h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            🗑️ Hapus surat dari <strong><?= esc($s['pengirim']) ?></strong>?<br>
-                                            Nomor: <strong><?= esc($s['nomor_surat']) ?></strong>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form action="<?= base_url('suratmasuk/delete/' . $s['id']) ?>" method="post">
-                                                <?= csrf_field() ?>
-                                                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                foreach ($surat as $s): ?>
+                <tr class="paginated">
+                    <td class="text-center"><?= $no++ ?></td>
+                    <td class="col-nomor">
+                        <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>"><?= esc($s['nomor_surat']) ?></span>
+                    </td>
+                    <td class="col-pengirim">
+                        <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['pengirim']) ?>"><?= esc($s['pengirim']) ?></span>
+                    </td>
+                    <td class="text-center"><?= esc($s['tanggal_terima']) ?></td>
+                    <td class="col-perihal">
+                        <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>"><?= esc($s['perihal']) ?></span>
+                    </td>
+                    <td class="text-center text-nowrap">
+                        <div class="d-flex justify-content-center flex-wrap gap-1">
+                            <a href="<?= base_url('suratmasuk/detail/' . $s['id']) ?>" class="btn btn-info btn-sm text-white"><i class="bi bi-eye-fill"></i></a>
+                            <a href="#" class="btn btn-warning btn-sm text-dark btn-edit-suratmasuk"
+                               data-id="<?= $s['id'] ?>"
+                               data-nomor="<?= esc($s['nomor_surat']) ?>"
+                               data-pengirim="<?= esc($s['pengirim']) ?>"
+                               data-tanggal="<?= esc($s['tanggal_terima']) ?>"
+                               data-perihal="<?= esc($s['perihal']) ?>"
+                               data-file="<?= esc($s['file_surat']) ?>"
+                               data-bs-toggle="modal" data-bs-target="#modalEditSuratMasuk">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="<?= base_url('uploads/suratmasuk/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
+                            <button class="btn btn-danger btn-sm text-white btn-hapus-suratmasuk"
+                                data-id="<?= $s['id'] ?>"
+                                data-pengirim="<?= esc($s['pengirim']) ?>"
+                                data-nomor="<?= esc($s['nomor_surat']) ?>"
+                                data-action="<?= base_url('suratmasuk/delete/' . $s['id']) ?>"
+                                data-bs-toggle="modal" data-bs-target="#modalHapusSuratMasuk">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
                 <?php endforeach ?>
             </tbody>
         </table>
     </div>
 </div>
-<!-- 🔍 Script Search + Pagination + Tooltip -->
+
+
+
+<!-- 📝 Modal Edit Surat Masuk -->
+<?= view('suratmasuk/modal_edit') ?>
+
+<!-- 🧨 Modal Hapus GLOBAL -->
+<div class="modal fade" id="modalHapusSuratMasuk" tabindex="-1" aria-labelledby="modalHapusSuratMasukLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-danger">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHapusSuratMasukLabel">Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="hapusMasukModalBody">
+        <!-- Diisi dinamis oleh JS -->
+      </div>
+      <div class="modal-footer">
+        <form id="formHapusSuratMasuk" action="#" method="post">
+          <?= csrf_field() ?>
+          <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔌 Panggil JS modular -->
+
 <script>
-    const rows = document.querySelectorAll("#suratTable tbody tr");
-    const rowsPerPage = 7;
-    let currentPage = 1;
+    // Script untuk mengisi konten modal hapus surat masuk
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalHapus = document.getElementById('modalHapusSuratMasuk');
+        modalHapus.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Tombol yang memicu modal
+            const id = button.getAttribute('data-id');
+            const pengirim = button.getAttribute('data-pengirim');
+            const nomor = button.getAttribute('data-nomor');
+            const actionUrl = button.getAttribute('data-action');
 
-    function filterRows() {
-        const keyword = document.getElementById("searchInput").value.toLowerCase();
-        rows.forEach(row => {
-            const text = row.innerText.toLowerCase();
-            row.dataset.visible = text.includes(keyword) ? "true" : "false";
+            // Update konten modal
+            const modalBody = document.getElementById('hapusMasukModalBody');
+            modalBody.innerHTML = `
+                🗑️ Hapus surat dari <strong>${pengirim}</strong>?<br>
+                Nomor: <strong>${nomor}</strong>
+            `;
+
+            // Update action form
+            const formHapus = document.getElementById('formHapusSuratMasuk');
+            formHapus.setAttribute('action', actionUrl);
         });
-    }
-
-    function showPage(page) {
-        currentPage = page;
-        const visibleRows = Array.from(rows).filter(row => row.dataset.visible !== "false");
-        visibleRows.forEach((row, i) => {
-            row.style.display = (i >= (page - 1) * rowsPerPage && i < page * rowsPerPage) ? "" : "none";
-        });
-        renderPagination(visibleRows.length);
-    }
-
-    function renderPagination(totalVisible) {
-        const totalPages = Math.ceil(totalVisible / rowsPerPage);
-        const container = document.getElementById("paginationControls");
-        container.innerHTML = "";
-
-        const prev = document.createElement("li");
-        prev.className = "page-item" + (currentPage === 1 ? " disabled" : "");
-        prev.innerHTML = `<button class="page-link">«</button>`;
-        prev.querySelector("button").onclick = () => showPage(currentPage - 1);
-        container.appendChild(prev);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement("li");
-            li.className = "page-item" + (i === currentPage ? " active" : "");
-            li.innerHTML = `<button class="page-link">${i}</button>`;
-            li.querySelector("button").onclick = () => showPage(i);
-            container.appendChild(li);
-        }
-
-        const next = document.createElement("li");
-        next.className = "page-item" + (currentPage === totalPages ? " disabled" : "");
-        next.innerHTML = `<button class="page-link">»</button>`;
-        next.querySelector("button").onclick = () => showPage(currentPage + 1);
-        container.appendChild(next);
-    }
-
-    document.getElementById("searchInput").addEventListener("input", () => {
-        filterRows();
-        showPage(1);
     });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        filterRows();
-        showPage(1);
-
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
-    });
-</script>
-
-<!-- 🎯 Tiga Tips Tambahan -->
-<script>
-    const flash = document.querySelector('.alert');
-    if (flash) flash.scrollIntoView({
-        behavior: 'smooth'
-    });
-
-    setTimeout(() => {
-        document.querySelectorAll('.alert-dismissible').forEach(alert => {
-            alert.classList.remove('show');
-            alert.classList.add('fade');
-        });
-    }, 5000);
-
-    document.querySelectorAll('.alert').forEach(el => {
-        el.style.animation = "popIn 0.5s ease";
-    });
-</script>
-
-<!-- Animasi CSS untuk efek popIn -->
-<style>
-    @keyframes popIn {
-        0% {
-            transform: scale(0.8);
-            opacity: 0;
-        }
-
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-</style>
-
-<!-- Toast auto-dismiss -->
-<script>
-    setTimeout(() => {
-        const toasts = document.querySelectorAll('.toast');
-        toasts.forEach(toast => toast.classList.remove('show'));
-    }, 4000);
 </script>
 
 <?= $this->endSection() ?>

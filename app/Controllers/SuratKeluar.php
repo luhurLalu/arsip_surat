@@ -16,7 +16,7 @@ class SuratKeluar extends BaseController
     // 📄 Tampilkan semua surat keluar
     public function index()
     {
-        $data['surat'] = $this->suratKeluar->orderBy('tanggal_kirim', 'DESC')->findAll();
+        $data['suratkeluar'] = $this->suratKeluar->orderBy('tanggal_kirim', 'DESC')->findAll();
         return view('suratkeluar/index', $data);
     }
 
@@ -29,22 +29,20 @@ class SuratKeluar extends BaseController
     // ✅ Simpan surat keluar baru
     public function store()
     {
-        $validation = $this->validate([
-            'nomor_surat'   => 'required|is_unique[surat_keluar.nomor_surat]',
-            'tujuan'        => 'required',
-            'tanggal_kirim' => 'required',
-            'perihal'       => 'required',
-            'file_surat'    => 'uploaded[file_surat]|max_size[file_surat,2048]|ext_in[file_surat,pdf,jpg,jpeg,png,gif]',
-        ]);
-
-        if (!$validation) {
-            return redirect()->back()->withInput()->with('error', 'Data tidak valid!');
+        $validation = \Config\Services::validation();
+        $rules = [
+            'nomor_surat'    => 'required',
+            'tujuan'         => 'required',
+            'tanggal_kirim'  => 'required|valid_date',
+            'perihal'        => 'required',
+            'file_surat'     => 'uploaded[file_surat]|max_size[file_surat,2048]|ext_in[file_surat,pdf,jpg,jpeg,png,gif]'
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', $validation->listErrors());
         }
-
         $file = $this->request->getFile('file_surat');
         $fileName = $file->getRandomName();
-        $file->move('uploads', $fileName);
-
+        $file->move('uploads/suratkeluar', $fileName);
         $this->suratKeluar->save([
             'nomor_surat'   => $this->request->getPost('nomor_surat'),
             'tujuan'        => $this->request->getPost('tujuan'),
@@ -52,8 +50,7 @@ class SuratKeluar extends BaseController
             'perihal'       => $this->request->getPost('perihal'),
             'file_surat'    => $fileName
         ]);
-
-        return redirect()->to('/suratkeluar')->with('success', 'Surat keluar berhasil disimpan.');
+        return redirect()->to('suratkeluar')->with('success', 'Data berhasil disimpan.');
     }
 
     // 🧐 Lihat detail surat keluar
@@ -73,47 +70,42 @@ class SuratKeluar extends BaseController
     // 🔁 Update surat keluar
     public function update($id)
     {
-        $surat = $this->suratKeluar->find($id);
+        $rules = [
+            'nomor_surat'   => 'required',
+            'tujuan'        => 'required',
+            'tanggal_kirim' => 'required|valid_date',
+            'perihal'       => 'required',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', $this->validator->listErrors());
+        }
         $data = [
             'nomor_surat'   => $this->request->getPost('nomor_surat'),
             'tujuan'        => $this->request->getPost('tujuan'),
             'tanggal_kirim' => $this->request->getPost('tanggal_kirim'),
             'perihal'       => $this->request->getPost('perihal'),
         ];
-
         $file = $this->request->getFile('file_surat');
-
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $valid = $this->validate([
-                'file_surat' => 'max_size[file_surat,2048]|ext_in[file_surat,pdf,jpg,jpeg,png,gif]',
-            ]);
-
-            if (!$valid) {
-                return redirect()->back()->withInput()->with('error', 'File tidak valid.');
-            }
-
+        if ($file && $file->isValid()) {
             $newName = $file->getRandomName();
-            $file->move('uploads', $newName);
+            $file->move('uploads/suratkeluar', $newName);
             $data['file_surat'] = $newName;
-
-            if ($surat['file_surat'] && file_exists('uploads/' . $surat['file_surat'])) {
-                unlink('uploads/' . $surat['file_surat']);
-            }
         }
-
         $this->suratKeluar->update($id, $data);
-        return redirect()->to('/suratkeluar')->with('success', 'Surat keluar berhasil diperbarui.');
+        return redirect()->to('suratkeluar')->with('success', 'Data berhasil diupdate.');
     }
 
     // ❌ Hapus surat keluar
     public function delete($id)
     {
         $surat = $this->suratKeluar->find($id);
-        if ($surat && $surat['file_surat'] && file_exists('uploads/' . $surat['file_surat'])) {
-            unlink('uploads/' . $surat['file_surat']);
+        if ($surat) {
+            if ($surat['file_surat'] && file_exists('uploads/suratkeluar/' . $surat['file_surat'])) {
+                unlink('uploads/suratkeluar/' . $surat['file_surat']);
+            }
+            $this->suratKeluar->delete($id);
+            return redirect()->to('suratkeluar')->with('success', 'Data berhasil dihapus.');
         }
-
-        $this->suratKeluar->delete($id);
-        return redirect()->to('/suratkeluar')->with('success', 'Surat keluar berhasil dihapus.');
+        return redirect()->to('suratkeluar')->with('error', 'Data tidak ditemukan.');
     }
 }
