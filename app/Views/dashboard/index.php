@@ -1,8 +1,19 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<?php
+// Proteksi variabel agar tidak error jika belum diset
+$totalMasuk  = $totalMasuk  ?? 0;
+$totalKeluar = $totalKeluar ?? 0;
+?>
 
 <div class="dashboard-wrapper">
+
+  <!-- Greeting -->
+  <div class="dashboard-greeting" style="margin-bottom: 15px;">
+    <p>👋 Halo, <strong><?= esc(session()->get('username')) ?></strong>!
+    Anda login sebagai <strong><?= esc(session()->get('role')) ?></strong>.</p>
+  </div>
 
   <section class="dashboard-card shadow-sm">
     <div class="card-header">
@@ -17,12 +28,12 @@
       <div class="chart-description">
         <div class="desc-box">
           <h5>📥 Surat Masuk</h5>
-          <div class="value"><?= $totalMasuk ?></div>
+          <div class="value"><?= esc($totalMasuk) ?></div>
           <div class="note">Total surat yang diterima tahun ini</div>
         </div>
         <div class="desc-box">
           <h5>📤 Surat Keluar</h5>
-          <div class="value"><?= $totalKeluar ?></div>
+          <div class="value"><?= esc($totalKeluar) ?></div>
           <div class="note">Total surat yang dikirim tahun ini</div>
         </div>
         <div class="desc-box">
@@ -41,9 +52,9 @@
 
 </div>
 
-
 <!-- Chart.js (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
 <!-- Chart Data for JS -->
 <script type="application/json" id="chart-surat-data">
   <?= json_encode([
@@ -51,6 +62,7 @@
     'data' => [(int)$totalMasuk, (int)$totalKeluar]
   ]) ?>
 </script>
+
 <!-- Chart init moved to public/js/index.js for modularity -->
 
 <?= $this->endSection() ?>

@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Controllers;
-use CodeIgniter\Controller;
+use App\Controllers\BaseController;
 
-class Preview extends Controller
+class Preview extends BaseController
 {
     public function file($filename)
     {

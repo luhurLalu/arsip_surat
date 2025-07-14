@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>E-ARSIP | KEMENAG KLU<?= $this->renderSection('title') ? ' | ' . $this->renderSection('title') : '' ?></title>
@@ -25,7 +26,8 @@
 
   <!-- Style Pendukung Layout -->
   <style>
-    html, body {
+    html,
+    body {
       height: 100%;
       margin: 0;
       padding: 0;
@@ -41,11 +43,13 @@
 
     main.container {
       flex: 1;
-      height: auto; /* Ubah dari 100% ke auto agar modal tidak tertindih tabel */
+      height: auto;
+      /* Ubah dari 100% ke auto agar modal tidak tertindih tabel */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow: visible; /* Ubah dari hidden ke visible agar modal tidak tertindih */
+      overflow: visible;
+      /* Ubah dari hidden ke visible agar modal tidak tertindih */
       padding-top: 1rem;
       padding-bottom: 1rem;
     }
@@ -61,7 +65,7 @@
       background-clip: text;
       /* Remove text-fill-color for better compatibility */
       text-shadow:
-        0 1px 2px rgba(30,33,45,0.18),
+        0 1px 2px rgba(30, 33, 45, 0.18),
         0 0 0.5px #fff,
         0 0 1px #2196f3;
       filter: none;
@@ -83,7 +87,9 @@
     }
 
     /* Navbar active tab color match Surat Masuk dashboard (#81d4fa) */
-    .navbar-nav .nav-link.active, .navbar-nav .nav-link.active:focus, .navbar-nav .nav-link.active:hover {
+    .navbar-nav .nav-link.active,
+    .navbar-nav .nav-link.active:focus,
+    .navbar-nav .nav-link.active:hover {
       color: #81d4fa !important;
       font-weight: 700;
       background: none !important;
@@ -97,53 +103,63 @@
 </head>
 <body<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' class="dashboard-page"' : '' ?>>
 
-  <!-- 🔷 Logo + Judul -->
-  <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
-    <div class="container-fluid justify-content-center d-flex">
-      <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
-        <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
-        <span class="brand-font text-primary">E-ARSIP KEMENAG KLU</span>
-      </a>
-    </div>
-  </nav>
 
-  <!-- 🌌 Navbar Navigasi -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#arsipNavbar" aria-controls="arsipNavbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <?php $isLoginPage = in_array(service('uri')->getSegment(1), ['login', 'auth']) && (service('uri')->getSegment(2) === 'login' || service('uri')->getSegment(1) === 'login'); ?>
+  <?php if (!$isLoginPage): ?>
+    <!-- 🔷 Logo + Judul -->
+    <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
+      <div class="container-fluid justify-content-center d-flex">
+        <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
+          <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
+          <span class="brand-font text-primary">E-ARSIP KEMENAG KLU</span>
+        </a>
+      </div>
+    </nav>
 
-      <div class="collapse navbar-collapse" id="arsipNavbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' active' : '' ?>" href="<?= base_url('/') ?>">
-              <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link<?= service('uri')->getSegment(1) === 'suratmasuk' ? ' active' : '' ?>" href="<?= base_url('suratmasuk') ?>">
-              <i class="bi bi-envelope-open"></i> Surat Masuk
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link<?= service('uri')->getSegment(1) === 'suratkeluar' ? ' active' : '' ?>" href="<?= base_url('suratkeluar') ?>">
-              <i class="bi bi-send-check"></i> Surat Keluar
-            </a>
-          </li>
-        </ul>
+    <!-- 🌌 Navbar Navigasi -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#arsipNavbar" aria-controls="arsipNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <div class="d-flex gap-2">
-          <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-outline-light btn-sm">
-            <i class="bi bi-plus-circle"></i> Masuk
-          </a>
-          <a href="<?= base_url('suratkeluar/create') ?>" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-plus-circle-fill"></i> Keluar
-          </a>
+        <div class="collapse navbar-collapse" id="arsipNavbar">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' active' : '' ?>" href="<?= base_url('/') ?>">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link<?= service('uri')->getSegment(1) === 'suratmasuk' ? ' active' : '' ?>" href="<?= base_url('suratmasuk') ?>">
+                <i class="bi bi-envelope-open"></i> Surat Masuk
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link<?= service('uri')->getSegment(1) === 'suratkeluar' ? ' active' : '' ?>" href="<?= base_url('suratkeluar') ?>">
+                <i class="bi bi-send-check"></i> Surat Keluar
+              </a>
+            </li>
+          </ul>
+
+          <div class="d-flex gap-2">
+            <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-outline-light btn-sm">
+              <i class="bi bi-plus-circle"></i> Masuk
+            </a>
+            <a href="<?= base_url('suratkeluar/create') ?>" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-plus-circle-fill"></i> Keluar
+            </a>
+          </div>
+
+          <div style="text-align: right;">
+            Anda login sebagai <strong><?= esc(session()->get('username')) ?> (<?= esc(session()->get('role')) ?>)</strong>
+            | <a href="<?= base_url('auth/logout') ?>">Logout</a>
+          </div>
+
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  <?php endif; ?>
 
   <!-- 🔽 Konten Halaman -->
   <main class="container">
@@ -162,10 +178,10 @@
   <!-- Section for custom/global JS -->
   <script src="<?= base_url('js/index.js') ?>"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       // Enable Bootstrap tooltips
       const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      tooltipTriggerList.forEach(function (el) {
+      tooltipTriggerList.forEach(function(el) {
         new bootstrap.Tooltip(el, {
           animation: true,
           html: false
@@ -175,5 +191,6 @@
   </script>
   <!-- Section for page-specific scripts -->
   <?= $this->renderSection('scripts') ?>
-</body>
+  </body>
+
 </html>
