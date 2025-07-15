@@ -25,81 +25,7 @@
   <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
   <!-- Style Pendukung Layout -->
-  <style>
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      background-color: #1e1e2f;
-      color: white;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
-    main.container {
-      flex: 1;
-      height: auto;
-      /* Ubah dari 100% ke auto agar modal tidak tertindih tabel */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: visible;
-      /* Ubah dari hidden ke visible agar modal tidak tertindih */
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-    }
-
-    .brand-font {
-      font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
-      font-weight: 700;
-      font-size: 1.7rem;
-      letter-spacing: 2px;
-      background: linear-gradient(90deg, #42a5f5 10%, #00bcd4 60%, #66bb6a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      /* Remove text-fill-color for better compatibility */
-      text-shadow:
-        0 1px 2px rgba(30, 33, 45, 0.18),
-        0 0 0.5px #fff,
-        0 0 1px #2196f3;
-      filter: none;
-      border-radius: 2px;
-      padding-inline: 2px;
-      transition: background 0.4s, text-shadow 0.4s;
-    }
-
-    .navbar-brand img {
-      object-fit: cover;
-    }
-
-    /* 🪄 Toast overlay agar tampil tanpa ganggu layout */
-    .toast-container {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 1200;
-    }
-
-    /* Navbar active tab color match Surat Masuk dashboard (#81d4fa) */
-    .navbar-nav .nav-link.active,
-    .navbar-nav .nav-link.active:focus,
-    .navbar-nav .nav-link.active:hover {
-      color: #81d4fa !important;
-      font-weight: 700;
-      background: none !important;
-      border-bottom: 2.5px solid #81d4fa;
-      border-radius: 0;
-      box-shadow: none;
-      letter-spacing: 0.5px;
-      transition: color 0.2s, border-bottom 0.2s;
-    }
-  </style>
+  <!-- Style kustom dipindahkan ke public/css/style.css -->
 </head>
 <body<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' class="dashboard-page"' : '' ?>>
 
@@ -108,7 +34,7 @@
   <?php if (!$isLoginPage): ?>
     <!-- 🔷 Logo + Judul -->
     <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
-      <div class="container-fluid justify-content-center d-flex">
+      <div class="container-fluid justify-content-center d-flex px-3">
         <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
           <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
           <span class="brand-font text-primary">E-ARSIP KEMENAG KLU</span>
@@ -118,7 +44,7 @@
 
     <!-- 🌌 Navbar Navigasi -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm">
-      <div class="container-fluid">
+      <div class="container-fluid px-3">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#arsipNavbar" aria-controls="arsipNavbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -143,6 +69,7 @@
           </ul>
 
           <div class="d-flex gap-2">
+
             <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-outline-light btn-sm">
               <i class="bi bi-plus-circle"></i> Masuk
             </a>
@@ -151,9 +78,46 @@
             </a>
           </div>
 
-          <div style="text-align: right;">
-            Anda login sebagai <strong><?= esc(session()->get('username')) ?> (<?= esc(session()->get('role')) ?>)</strong>
-            | <a href="<?= base_url('auth/logout') ?>">Logout</a>
+          <!-- User Dropdown Menu with Avatar, Username, and Menu Items -->
+          <div class="dropdown ms-3">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background:none;box-shadow:none;padding:0;">
+              <span class="rounded-circle d-flex justify-content-center align-items-center me-2" style="width:36px;height:36px;overflow:hidden;background:#e0e0e0;">
+                <i class="bi bi-person-circle fs-3 text-secondary"></i>
+              </span>
+              <span class="fw-normal text-secondary" style="font-size:1.08rem;"><?= esc(session()->get('username')) ?></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown" style="min-width: 220px;">
+              <li class="px-3 py-2">
+                <div class="fw-bold mb-1" style="font-size:1.05rem;">
+                  <?= esc(session()->get('username')) ?>
+                </div>
+                <div class="text-muted small mb-1">
+                  <?= esc(session()->get('role')) ?>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-person"></i> Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-calendar-event"></i> Calendar
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-sliders"></i> Settings
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger d-flex align-items-center gap-2" href="<?= base_url('auth/logout') ?>">
+                  <i class="bi bi-power"></i> Logout
+                </a>
+              </li>
+            </ul>
           </div>
 
         </div>
