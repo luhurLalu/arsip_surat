@@ -10,7 +10,7 @@ $totalKeluar = $totalKeluar ?? 0;
 <div class="dashboard-wrapper">
 
   <!-- Greeting -->
-  <div class="dashboard-greeting" style="margin-bottom: 15px;">
+  <div class="dashboard-greeting" style="margin-bottom: 40px;">
 
   </div>
 
@@ -21,10 +21,10 @@ $totalKeluar = $totalKeluar ?? 0;
       </div>
     </div>
     <div class="chart-row">
-      <div class="chart-container">
+      <div class="chart-container" style="margin-top: 10px;">
         <canvas id="chartSurat"></canvas>
       </div>
-      <div class="chart-description">
+      <div class="chart-description" style="margin-top: 15px;">
         <div class="desc-box">
           <h5>📥 Surat Masuk</h5>
           <div class="value"><?= esc($totalMasuk) ?></div>

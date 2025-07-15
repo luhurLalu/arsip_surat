@@ -46,18 +46,22 @@
 
         <div class="collapse navbar-collapse" id="arsipNavbar">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' active' : '' ?>" href="<?= base_url('/') ?>">
+            <?php
+              $seg1 = service('uri')->getSegment(1);
+              $isDashboard = $seg1 === '' || $seg1 === 'dashboard';
+              $isMasuk = $seg1 === 'suratmasuk';
+              $isKeluar = $seg1 === 'suratkeluar';
+            ?>
+            <li class="nav-item d-flex align-items-center gap-2">
+              <a href="<?= base_url('/') ?>" class="nav-link p-0<?= $isDashboard ? ' active-underline' : '' ?>" style="font-weight:600;<?= $isDashboard ? 'color:#81d4fa;' : 'color:#fff;' ?>">
                 <i class="bi bi-speedometer2"></i> Dashboard
               </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link<?= service('uri')->getSegment(1) === 'suratmasuk' ? ' active' : '' ?>" href="<?= base_url('suratmasuk') ?>">
+              <span style="color:#888;">|</span>
+              <a href="<?= base_url('suratmasuk') ?>" class="nav-link p-0<?= $isMasuk ? ' active-underline' : '' ?>" style="font-weight:600;<?= $isMasuk ? 'color:#81d4fa;' : 'color:#fff;' ?>">
                 <i class="bi bi-envelope-open"></i> Surat Masuk
               </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link<?= service('uri')->getSegment(1) === 'suratkeluar' ? ' active' : '' ?>" href="<?= base_url('suratkeluar') ?>">
+              <span style="color:#888;">|</span>
+              <a href="<?= base_url('suratkeluar') ?>" class="nav-link p-0<?= $isKeluar ? ' active-underline' : '' ?>" style="font-weight:600;<?= $isKeluar ? 'color:#81d4fa;' : 'color:#fff;' ?>">
                 <i class="bi bi-send-check"></i> Surat Keluar
               </a>
             </li>

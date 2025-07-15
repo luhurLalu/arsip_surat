@@ -1,3 +1,19 @@
+/* --- Navbar Active Underline --- */
+.nav-link.active-underline {
+  position: relative;
+  color: #81d4fa !important;
+}
+.nav-link.active-underline::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: #81d4fa;
+  border-radius: 2px;
+}
 /* Judul login dengan tema dashboard (biru, modern, tegas, glow) */
 .login-title-dashboard {
   font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
@@ -84,7 +100,7 @@ body.dashboard-page {
   justify-content: center;
   align-items: flex-start;
 }
-}
+/* penutup .desc-box di atas, hapus kurung kurawal ini */
 .desc-box h5 {
   margin: 0 0 0.5rem;
   font-size: 1rem;
