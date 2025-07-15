@@ -11,8 +11,7 @@ $totalKeluar = $totalKeluar ?? 0;
 
   <!-- Greeting -->
   <div class="dashboard-greeting" style="margin-bottom: 15px;">
-    <p>👋 Halo, <strong><?= esc(session()->get('username')) ?></strong>!
-    Anda login sebagai <strong><?= esc(session()->get('role')) ?></strong>.</p>
+
   </div>
 
   <section class="dashboard-card shadow-sm">

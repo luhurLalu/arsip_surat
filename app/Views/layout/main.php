@@ -7,12 +7,7 @@
 
   <!-- Bootstrap CSS -->
   <link rel="icon" type="image/png" href="<?= base_url('images/Logo.png') ?>">
-  <!--
-    OPTIMALISASI:
-    - Pastikan file css/style.css dan js/index.js sudah di-minify untuk produksi.
-    - Aktifkan cache control untuk asset statis (gambar, css, js) di konfigurasi web server (misal .htaccess atau nginx conf).
-    - Untuk data surat yang sangat banyak, gunakan paginasi server-side (bukan hanya JS) agar load lebih ringan.
-  -->
+ 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -37,7 +32,7 @@
       <div class="container-fluid justify-content-center d-flex px-3">
         <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
           <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
-          <span class="brand-font text-primary">E-ARSIP KEMENAG KLU</span>
+          <span class="login-title-dashboard mb-0" style="font-size:1.7rem;line-height:1.1;">E-ARSIP KEMENAG KLU</span>
         </a>
       </div>
     </nav>
@@ -86,7 +81,7 @@
               </span>
               <span class="fw-normal text-secondary" style="font-size:1.08rem;"><?= esc(session()->get('username')) ?></span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown" style="min-width: 220px;">
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown" style="min-width: 180px;">
               <li class="px-3 py-2">
                 <div class="fw-bold mb-1" style="font-size:1.05rem;">
                   <?= esc(session()->get('username')) ?>

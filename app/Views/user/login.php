@@ -4,7 +4,7 @@
   <div class="card shadow-lg p-4" style="background: #23243a; min-width:340px; max-width:370px; border-radius:18px;">
     <div class="text-center mb-3">
       <img src="<?= base_url('images/Logo.png') ?>" alt="Logo" width="56" height="56" class="rounded-circle shadow mb-2">
-      <h3 class="brand-font mb-0" style="font-size:1.5rem;">E-ARSIP KEMENAG KLU</h3>
+      <h3 class="login-title-dashboard mb-0">E-ARSIP KEMENAG KLU</h3>
       <div class="text-secondary" style="font-size:0.95rem;">Login Sistem Arsip Surat</div>
     </div>
 
