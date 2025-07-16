@@ -1,0 +1,46 @@
+# Disable directory browsing
+Options -Indexes
+
+# Protect .env and other sensitive files
+<FilesMatch "^\.(env|htaccess|git|gitignore|gitattributes|env.example|user.ini)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ----------------------------------------------------------------------
+# Rewrite engine settings
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the requested path and file is not /index.php and the file or directory does not exist
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Prevent access to certain files
+# ----------------------------------------------------------------------
+<Files composer.json>
+    Order allow,deny
+    Deny from all
+</Files>
+<Files composer.lock>
+    Order allow,deny
+    Deny from all
+</Files>
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# ----------------------------------------------------------------------
+# Set proper MIME types for files
+# ----------------------------------------------------------------------
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+
+# ----------------------------------------------------------------------
+# End of file
+# ----------------------------------------------------------------------

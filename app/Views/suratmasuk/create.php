@@ -1,0 +1,84 @@
+<?= $this->extend('layout/main') ?>
+<?= $this->section('content') ?>
+
+<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
+
+<div class="container py-4">
+  <h4 class="text-white mb-4">
+    <i class="bi bi-plus-circle-fill text-info"></i> Tambah Surat Masuk
+  </h4>
+
+  <form action="<?= base_url('suratmasuk/store') ?>" method="post" enctype="multipart/form-data" class="form-dark">
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="nomor_surat" class="form-label">Nomor Surat</label>
+        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label for="pengirim" class="form-label">Pengirim</label>
+        <input type="text" name="pengirim" id="pengirim" class="form-control" required>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="tanggal_terima" class="form-label">Tanggal Terima</label>
+        <input type="text" name="tanggal_terima" id="tanggal_terima" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label for="perihal" class="form-label">Perihal</label>
+        <input type="text" name="perihal" id="perihal" class="form-control" required>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="file_surat" class="form-label">Unggah File</label>
+      <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      <div id="filePreview"></div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-5 mb-2 border-top pt-3">
+      <a href="<?= base_url('suratmasuk') ?>" class="btn btn-secondary btn-sm">← Kembali</a>
+      <button type="submit" class="btn btn-info btn-sm text-dark">
+        <i class="bi bi-save-fill"></i> Simpan
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#tanggal_terima", {
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "l, d F Y",
+      allowInput: true
+    });
+  });
+  const inputFile = document.getElementById("file_surat");
+  const previewFile = document.getElementById("filePreview");
+  const fileIcons = {
+    pdf: 'bi-file-earmark-pdf-fill text-danger',
+    doc: 'bi-file-earmark-word-fill text-primary',
+    docx: 'bi-file-earmark-word-fill text-primary',
+    jpg: 'bi-file-earmark-image-fill text-warning',
+    jpeg: 'bi-file-earmark-image-fill text-warning',
+    png: 'bi-file-earmark-image-fill text-warning'
+  };
+  inputFile.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) {
+      previewFile.innerHTML = "";
+      return;
+    }
+    const ext = file.name.split('.').pop().toLowerCase();
+    const icon = fileIcons[ext] || 'bi-file-earmark-fill text-light';
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+    const label = `<i class=\"bi ${icon}\"></i> ${file.name} (${sizeMB} MB)`;
+    previewFile.innerHTML = label;
+  });
+</script>
+
+<?= $this->endSection() ?>
