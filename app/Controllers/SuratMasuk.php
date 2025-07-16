@@ -21,6 +21,36 @@ class SuratMasuk extends BaseController
     {
         return view('suratmasuk/create');
     }
+    public function store()
+    {
+        $validation = \Config\Services::validation();
+
+        $rules = [
+            'nomor_surat'     => 'required',
+            'pengirim'        => 'required',
+            'tanggal_terima'  => 'required|valid_date',
+            'perihal'         => 'required',
+            'file_surat'      => 'uploaded[file_surat]|mime_in[file_surat,application/pdf,image/jpeg,image/png]|max_size[file_surat,2048]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', $validation->listErrors());
+        }
+
+        $file = $this->request->getFile('file_surat');
+        $fileName = $file->getRandomName();
+        $file->move('uploads/suratmasuk', $fileName);
+
+        $this->suratMasuk->save([
+            'nomor_surat'    => $this->request->getPost('nomor_surat'),
+            'pengirim'       => $this->request->getPost('pengirim'),
+            'tanggal_terima' => $this->request->getPost('tanggal_terima'),
+            'perihal'        => $this->request->getPost('perihal'),
+            'file_surat'     => $fileName
+        ]);
+
+        return redirect()->to('suratmasuk')->with('success', 'Data berhasil disimpan.');
+    }
 
     public function index()
     {
@@ -108,18 +138,18 @@ class SuratMasuk extends BaseController
         return redirect()->to('suratmasuk')->with('error', 'Data tidak ditemukan.');
     }
 
-    // public function cleanup()
-    // {
-    //     $files = scandir('uploads/');
-    //     $dataFileSurat = array_column($this->suratMasuk->findAll(), 'file_surat');
+    public function cleanup()
+    {
+        $files = scandir('uploads/suratmasuk/');
+        $dataFileSurat = array_column($this->suratMasuk->findAll(), 'file_surat');
 
-    //     foreach ($files as $file) {
-    //         if ($file === '.' || $file === '..') continue;
-    //         if (!in_array($file, $dataFileSurat)) {
-    //             unlink('uploads/' . $file);
-    //         }
-    //     }
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') continue;
+            if (!in_array($file, $dataFileSurat)) {
+                unlink('uploads/suratmasuk/' . $file);
+            }
+        }
 
-    //     return redirect()->to('suratmasuk')->with('success', 'File tak terpakai berhasil dibersihkan.');
-    // }
+        return redirect()->to('suratmasuk')->with('success', 'File tak terpakai berhasil dibersihkan.');
+    }
 }

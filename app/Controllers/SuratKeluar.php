@@ -108,4 +108,18 @@ class SuratKeluar extends BaseController
         }
         return redirect()->to('suratkeluar')->with('error', 'Data tidak ditemukan.');
     }
+    public function cleanup()
+    {
+        $files = scandir('uploads/suratkeluar/');
+        $dataFileSurat = array_column($this->suratKeluar->findAll(), 'file_surat');
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') continue;
+            if (!in_array($file, $dataFileSurat)) {
+                unlink('uploads/suratkeluar/' . $file);
+            }
+        }
+
+        return redirect()->to('suratkeluar')->with('success', 'File tak terpakai berhasil dibersihkan.');
+    }
 }

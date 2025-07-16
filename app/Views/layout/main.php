@@ -2,6 +2,19 @@
 <html lang="en">
 
 <head>
+  <style>
+    /* Dropdown submenu support for Bootstrap 5 */
+    .dropdown-submenu {
+      position: relative;
+    }
+    .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      right: 100%;
+      left: auto;
+      margin-top: -0.25rem;
+      margin-right: 0.1rem;
+    }
+  </style>
   <meta charset="UTF-8">
   <title>E-ARSIP | KEMENAG KLU<?= $this->renderSection('title') ? ' | ' . $this->renderSection('title') : '' ?></title>
 
@@ -31,7 +44,7 @@
     <nav class="navbar navbar-dark bg-dark border-bottom shadow-sm">
       <div class="container-fluid justify-content-center d-flex px-3">
         <a class="navbar-brand d-flex align-items-center gap-2 mx-auto" href="<?= base_url('/') ?>">
-          <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="rounded-circle shadow">
+          <img src="<?= base_url('images/logo.png') ?>" alt="Logo" width="32" height="32" class="shadow">
           <span class="login-title-dashboard mb-0" style="font-size:1.7rem;line-height:1.1;">E-ARSIP KEMENAG KLU</span>
         </a>
       </div>
@@ -95,15 +108,22 @@
                 </div>
               </li>
               <li><hr class="dropdown-divider"></li>
-              <li>
-                <a class="dropdown-item d-flex align-items-center gap-2" href="#">
-                  <i class="bi bi-person"></i> Profile
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle d-flex align-items-center gap-2" href="#" id="cleanupDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-trash"></i> Cleanup
                 </a>
-              </li>
-              <li>
-                <a class="dropdown-item d-flex align-items-center gap-2" href="#">
-                  <i class="bi bi-calendar-event"></i> Calendar
-                </a>
+                <ul class="dropdown-menu" aria-labelledby="cleanupDropdown">
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="<?= base_url('suratmasuk/cleanup') ?>">
+                      <i class="bi bi-envelope-open"></i> Surat Masuk
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="<?= base_url('suratkeluar/cleanup') ?>">
+                      <i class="bi bi-envelope-paper"></i> Surat Keluar
+                    </a>
+                  </li>
+                </ul>
               </li>
               <li>
                 <a class="dropdown-item d-flex align-items-center gap-2" href="#">
@@ -140,6 +160,27 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- Section for custom/global JS -->
   <script src="<?= base_url('js/index.js') ?>"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Enable Bootstrap tooltips
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(function(el) {
+        new bootstrap.Tooltip(el, { animation: true, html: false });
+      });
+      // Enable dropdown submenu for Cleanup
+      var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+      dropdownSubmenus.forEach(function (submenu) {
+        submenu.addEventListener('mouseenter', function () {
+          var menu = submenu.querySelector('.dropdown-menu');
+          if (menu) menu.classList.add('show');
+        });
+        submenu.addEventListener('mouseleave', function () {
+          var menu = submenu.querySelector('.dropdown-menu');
+          if (menu) menu.classList.remove('show');
+        });
+      });
+    });
+  </script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Enable Bootstrap tooltips

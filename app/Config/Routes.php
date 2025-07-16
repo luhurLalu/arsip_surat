@@ -1,4 +1,3 @@
-
 <?php
 // Tambahkan route login agar tidak 404
 $routes->get('login', 'Auth::login');
@@ -20,7 +19,7 @@ $routes->get('suratmasuk/detail/(:num)', 'SuratMasuk::detail/$1');
 $routes->get('suratmasuk/edit/(:num)', 'SuratMasuk::edit/$1');
 $routes->post('suratmasuk/update/(:num)', 'SuratMasuk::update/$1');
 $routes->post('suratmasuk/delete/(:num)', 'SuratMasuk::delete/$1');
-// $routes->get('suratmasuk/cleanup', 'SuratMasuk::cleanup');
+$routes->get('suratmasuk/cleanup', 'SuratMasuk::cleanup');
 $routes->get('preview/(:segment)', 'Preview::file/$1');
 // 📤 Routes untuk Surat Keluar
 $routes->get('suratkeluar',              'SuratKeluar::index');
@@ -30,6 +29,7 @@ $routes->get('suratkeluar/detail/(:num)','SuratKeluar::detail/$1');
 $routes->get('suratkeluar/edit/(:num)',  'SuratKeluar::edit/$1');
 $routes->post('suratkeluar/update/(:num)','SuratKeluar::update/$1');
 $routes->post('suratkeluar/delete/(:num)','SuratKeluar::delete/$1');
+$routes->get('suratkeluar/cleanup', 'SuratKeluar::cleanup');
 // Routes untuk User
 $routes->get('user/edit/(:num)', 'User::edit/$1');
 // Routes untuk mengupdate user
