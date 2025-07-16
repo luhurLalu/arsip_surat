@@ -1,6 +1,7 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
+
 <div class="container py-4">
   <h4 class="text-white mb-4">
     <i class="bi bi-pencil-square text-warning"></i> Edit Surat Keluar

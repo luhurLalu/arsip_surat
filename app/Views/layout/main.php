@@ -77,6 +77,11 @@
               <a href="<?= base_url('suratkeluar') ?>" class="nav-link p-0<?= $isKeluar ? ' active-underline' : '' ?>" style="font-weight:600;<?= $isKeluar ? 'color:#81d4fa;' : 'color:#fff;' ?>">
                 <i class="bi bi-send-check"></i> Surat Keluar
               </a>
+              <span style="color:#888;">|</span>
+              <?php $isTugas = $seg1 === 'surattugas'; ?>
+              <a href="<?= base_url('surattugas') ?>" class="nav-link p-0<?= $isTugas ? ' active-underline' : '' ?>" style="font-weight:600;<?= $isTugas ? 'color:#81d4fa;' : 'color:#fff;' ?>">
+                <i class="bi bi-briefcase"></i> Surat Tugas
+              </a>
             </li>
           </ul>
 
@@ -87,6 +92,9 @@
             </a>
             <a href="<?= base_url('suratkeluar/create') ?>" class="btn btn-outline-primary btn-sm">
               <i class="bi bi-plus-circle-fill"></i> Keluar
+            </a>
+            <a href="/surattugas/create" class="btn btn-success btn-sm text-dark">
+              <i class="bi bi-briefcase-fill"></i> Tugas
             </a>
           </div>
 

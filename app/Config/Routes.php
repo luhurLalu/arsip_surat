@@ -30,6 +30,14 @@ $routes->get('suratkeluar/edit/(:num)',  'SuratKeluar::edit/$1');
 $routes->post('suratkeluar/update/(:num)','SuratKeluar::update/$1');
 $routes->post('suratkeluar/delete/(:num)','SuratKeluar::delete/$1');
 $routes->get('suratkeluar/cleanup', 'SuratKeluar::cleanup');
+$routes->get('surattugas',              'SuratTugas::index');
+$routes->get('surattugas/create',       'SuratTugas::create');
+$routes->post('surattugas/store',       'SuratTugas::store');
+$routes->get('surattugas/detail/(:num)','SuratTugas::detail/$1');
+$routes->get('surattugas/edit/(:num)',  'SuratTugas::edit/$1');
+$routes->post('surattugas/update/(:num)','SuratTugas::update/$1');
+$routes->post('surattugas/delete/(:num)','SuratTugas::delete/$1');
+$routes->get('surattugas/cleanup', 'SuratTugas::cleanup');
 // Routes untuk User
 $routes->get('user/edit/(:num)', 'User::edit/$1');
 // Routes untuk mengupdate user

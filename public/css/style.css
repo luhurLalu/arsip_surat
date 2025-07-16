@@ -1,3 +1,14 @@
+/* Modal XL agar lebar sama dengan container Bootstrap (1140px) */
+.modal-xl {
+  max-width: 1140px !important;
+  width: 100%;
+}
+/* Modal XL agar lebar sama dengan container Bootstrap (1140px) */
+.modal-xl {
+  max-width: 1140px;
+}
+
+
 /* --- Navbar Active Underline --- */
 .nav-link.active-underline {
   position: relative;
