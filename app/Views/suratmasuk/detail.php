@@ -72,16 +72,16 @@ function tanggal_indo($datetime) {
       <div class="info-zone">
         <dl class="row mb-4">
           <dt class="col-sm-4">Nomor Surat</dt>
-          <dd class="col-sm-8"><?= esc($surat['nomor_surat']) ?></dd>
+          <dd class="col-sm-8 text-uppercase"><?= esc($surat['nomor_surat']) ?></dd>
 
           <dt class="col-sm-4">Pengirim</dt>
-          <dd class="col-sm-8"><?= esc($surat['pengirim']) ?></dd>
+          <dd class="col-sm-8 text-uppercase"><?= esc($surat['pengirim']) ?></dd>
 
           <dt class="col-sm-4">Tanggal Terima</dt>
           <dd class="col-sm-8"><?= tanggal_indo($surat['tanggal_terima']) ?></dd>
 
           <dt class="col-sm-4">Perihal</dt>
-          <dd class="col-sm-8"><?= esc($surat['perihal']) ?></dd>
+          <dd class="col-sm-8 text-uppercase"><?= esc($surat['perihal']) ?></dd>
 
           <?php if (!empty($surat['created_at'])): ?>
             <dt class="col-sm-4">Waktu Input</dt>

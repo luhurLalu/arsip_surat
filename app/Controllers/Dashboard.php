@@ -3,15 +3,17 @@
 namespace App\Controllers;
 use App\Models\SuratMasukModel;
 use App\Models\SuratKeluarModel;
+use App\Models\SuratTugasModel;
 
 class Dashboard extends BaseController
 {
-    protected $masuk, $keluar;
+    protected $masuk, $keluar, $tugas;
 
     public function __construct()
     {
         $this->masuk  = new SuratMasukModel();
         $this->keluar = new SuratKeluarModel();
+        $this->tugas  = new SuratTugasModel();
     }
 
     public function index()
@@ -19,6 +21,7 @@ class Dashboard extends BaseController
         $data = [
             'totalMasuk'    => $this->masuk->countAll(),
             'totalKeluar'   => $this->keluar->countAll(),
+            'totalTugas'    => $this->tugas->countAll(),
             'bulanMasuk'    => $this->groupPerMonth($this->masuk, 'tanggal_terima'),
             'bulanKeluar'   => $this->groupPerMonth($this->keluar, 'tanggal_kirim'),
         ];

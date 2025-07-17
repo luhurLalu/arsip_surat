@@ -258,7 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
             datasets: [{
               label: 'Distribusi Surat',
               data: chartData.data,
-              backgroundColor: ['#42a5f5', '#66bb6a'],
+              // Biru untuk Masuk, Hijau untuk Keluar, Kuning untuk Tugas
+              backgroundColor: ['#42a5f5', '#ffd600', '#66bb6a'],
               borderColor: '#1e212d',
               borderWidth: 4
             }]

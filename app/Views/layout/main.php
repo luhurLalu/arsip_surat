@@ -86,7 +86,6 @@
           </ul>
 
           <div class="d-flex gap-2">
-
             <a href="<?= base_url('suratmasuk/create') ?>" class="btn btn-outline-light btn-sm">
               <i class="bi bi-plus-circle"></i> Masuk
             </a>
