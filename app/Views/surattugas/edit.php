@@ -24,11 +24,11 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="nomor_surat" class="form-label">Nomor Surat</label>
-                <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" value="<?= esc($surat['nomor_surat']) ?>" readonly required>
+                <input type="text" name="nomor_surat" id="nomor_surat" class="form-control text-uppercase" value="<?= esc($surat['nomor_surat']) ?>" readonly required>
               </div>
               <div class="col-md-6">
                 <label for="tujuan" class="form-label">Tujuan</label>
-                <input type="text" name="tujuan" id="tujuan" class="form-control" value="<?= esc($surat['tujuan']) ?>" required>
+                <input type="text" name="tujuan" id="tujuan" class="form-control text-uppercase" value="<?= esc($surat['tujuan']) ?>" required>
               </div>
             </div>
 
@@ -39,7 +39,7 @@
               </div>
               <div class="col-md-6">
                 <label for="perihal" class="form-label">Perihal</label>
-                <input type="text" name="perihal" id="perihal" class="form-control" value="<?= esc($surat['perihal']) ?>" required>
+                <input type="text" name="perihal" id="perihal" class="form-control text-uppercase" value="<?= esc($surat['perihal']) ?>" required>
               </div>
             </div>
 

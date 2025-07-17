@@ -81,16 +81,16 @@ document.addEventListener("DOMContentLoaded", function() {
       <div class="info-zone">
         <dl class="row mb-4">
           <dt class="col-sm-4">Nomor Surat</dt>
-          <dd class="col-sm-8"><?= esc($surat['nomor_surat']) ?></dd>
+                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['nomor_surat']) ?></dd>
 
           <dt class="col-sm-4">Tujuan</dt>
-          <dd class="col-sm-8"><?= esc($surat['tujuan']) ?></dd>
+                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan']) ?></dd>
 
           <dt class="col-sm-4">Tanggal Kirim</dt>
           <dd class="col-sm-8"><?= tanggal_indo($surat['tanggal_kirim']) ?></dd>
 
           <dt class="col-sm-4">Perihal</dt>
-          <dd class="col-sm-8"><?= esc($surat['perihal']) ?></dd>
+                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['perihal']) ?></dd>
 
           <?php if (!empty($surat['created_at'])): ?>
             <dt class="col-sm-4">Waktu Input</dt>
