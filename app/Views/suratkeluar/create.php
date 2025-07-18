@@ -8,14 +8,15 @@
   </h4>
 
   <form action="<?= base_url('suratkeluar/store') ?>" method="post" enctype="multipart/form-data" class="form-dark">
+
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="nomor_surat" class="form-label">Nomor Surat</label>
         <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
       </div>
       <div class="col-md-6">
-        <label for="tujuan" class="form-label">Tujuan</label>
-        <input type="text" name="tujuan" id="tujuan" class="form-control" required>
+        <label for="pengirim" class="form-label">Asal Surat</label>
+        <input type="text" name="pengirim" id="pengirim" class="form-control text-uppercase" required>
       </div>
     </div>
     <div class="row mb-3">
@@ -29,10 +30,29 @@
       </div>
     </div>
     <div class="mb-4">
-      <label for="file_surat" class="form-label">File Surat (PDF/Gambar/Doc)</label>
-      <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx">
-      <div id="filePreview"></div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="file_surat" class="form-label">File Surat (PDF/Gambar/Doc)</label>
+          <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx">
+          <div id="filePreview"></div>
+        </div>
+        <div class="col-md-6">
+          <label for="tujuan_surat" class="form-label">Tujuan Surat</label>
+          <select name="tujuan_surat" id="tujuan_surat" class="form-select" required onchange="toggleTujuanLainnya(this)">
+            <option value="">- Pilih Tujuan Surat -</option>
+            <option value="Kepala Kantor">KEPALA KANTOR</option>
+            <option value="KASUBBAG TU">KASUBBAG TU</option>
+            <option value="SETJEN">SEKRETARIAT</option>
+            <option value="BIMAS">BIMBINGAN MASYARAKAT ISLAM</option>
+            <option value="PENDIS">PENDIDIKAN AGAMA ISLAM</option>
+            <option value="PENYELENGGARA HAJI">PENYELENGGARA HAJI</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+          <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya...">
+        </div>
+      </div>
     </div>
+
     <div class="d-flex justify-content-between mt-5 mb-2 border-top pt-3">
       <a href="<?= base_url('suratkeluar') ?>" class="btn btn-secondary btn-sm">← Batal</a>
       <button type="submit" class="btn btn-info btn-sm text-dark">
@@ -40,6 +60,7 @@
       </button>
     </div>
   </form>
+
 </div>
 <!-- Flatpickr + Preview Dinamis -->
 <script>
@@ -61,7 +82,7 @@
     jpeg: 'bi-file-earmark-image-fill text-warning',
     png: 'bi-file-earmark-image-fill text-warning'
   };
-  inputFile.addEventListener("change", function () {
+  inputFile.addEventListener("change", function() {
     const file = this.files[0];
     if (!file) {
       previewFile.innerHTML = "";

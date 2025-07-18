@@ -41,9 +41,15 @@ class SuratMasuk extends BaseController
         $fileName = $file->getRandomName();
         $file->move('uploads/suratmasuk', $fileName);
 
+        $tujuanSurat = $this->request->getPost('tujuan_surat');
+        if ($tujuanSurat === 'Lainnya') {
+            $tujuanSurat = $this->request->getPost('tujuan_surat_lainnya');
+        }
+
         $this->suratMasuk->save([
             'nomor_surat'    => $this->request->getPost('nomor_surat'),
             'pengirim'       => $this->request->getPost('pengirim'),
+            'tujuan_surat'   => $tujuanSurat,
             'tanggal_terima' => $this->request->getPost('tanggal_terima'),
             'perihal'        => $this->request->getPost('perihal'),
             'file_surat'     => $fileName
@@ -105,9 +111,15 @@ class SuratMasuk extends BaseController
             return redirect()->back()->withInput()->with('error', $this->validator->listErrors());
         }
 
+        // Ambil tujuan_surat dari dropdown, jika Lainnya ambil dari input manual
+        $tujuanSurat = $this->request->getPost('tujuan_surat');
+        if ($tujuanSurat === 'Lainnya') {
+            $tujuanSurat = $this->request->getPost('tujuan_surat_lainnya');
+        }
         $data = [
             'nomor_surat'    => $this->request->getPost('nomor_surat'),
             'pengirim'       => $this->request->getPost('pengirim'),
+            'tujuan_surat'   => $tujuanSurat,
             'tanggal_terima' => $this->request->getPost('tanggal_terima'),
             'perihal'        => $this->request->getPost('perihal'),
         ];

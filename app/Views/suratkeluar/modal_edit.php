@@ -17,28 +17,75 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label for="edit_nomor_surat" class="form-label">Nomor Surat</label>
-              <input type="text" name="nomor_surat" id="edit_nomor_surat" class="form-control" readonly required>
+              <input type="text" name="nomor_surat" id="edit_nomor_surat" class="form-control" readonly required value="<?= isset($surat['nomor_surat']) ? esc($surat['nomor_surat']) : '' ?>">
             </div>
             <div class="col-md-6">
-              <label for="edit_tujuan" class="form-label">Tujuan</label>
-              <input type="text" name="tujuan" id="edit_tujuan" class="form-control text-uppercase" required>
+              <label for="edit_pengirim" class="form-label">Asal Surat</label>
+              <input type="text" name="pengirim" id="edit_pengirim" class="form-control text-uppercase" required value="">
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-6">
               <label for="edit_tanggal_kirim" class="form-label">Tanggal Kirim</label>
-              <input type="text" name="tanggal_kirim" id="edit_tanggal_kirim" class="form-control" required>
+              <input type="text" name="tanggal_kirim" id="edit_tanggal_kirim" class="form-control" required value="<?= isset($surat['tanggal_kirim']) ? esc($surat['tanggal_kirim']) : '' ?>">
             </div>
             <div class="col-md-6">
               <label for="edit_perihal" class="form-label">Perihal</label>
-              <input type="text" name="perihal" id="edit_perihal" class="form-control text-uppercase" required>
+              <input type="text" name="perihal" id="edit_perihal" class="form-control text-uppercase" required value="<?= isset($surat['perihal']) ? esc($surat['perihal']) : '' ?>">
             </div>
           </div>
           <div class="mb-4">
-            <label for="edit_file_surat" class="form-label">Ganti File (Opsional)</label>
-            <input type="file" name="file_surat" id="edit_file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-            <div id="edit_filePreview" class="mt-2 text-info small"></div>
-            <div id="edit_fileLama" class="form-text text-light mt-1"></div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="edit_file_surat" class="form-label">Ganti File (Opsional)</label>
+                <input type="file" name="file_surat" id="edit_file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                <?php if (!empty($surat['file_surat'])): ?>
+                  <div id="edit_fileLama" class="form-text text-light mt-1">File lama: <a href="<?= base_url('uploads/suratkeluar/' . $surat['file_surat']) ?>" target="_blank" class="text-info"><?= esc($surat['file_surat']) ?></a></div>
+                <?php endif; ?>
+                <div id="edit_filePreview" class="mt-2 text-info small"></div>
+                <div id="edit_fileLama" class="form-text text-light mt-1"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="edit_tujuan_surat" class="form-label">Tujuan Surat</label>
+                <?php
+                $presetTujuan = [
+                  'KEPALA KANTOR',
+                  'KASUBBAG TU',
+                  'SEKRETARIAT',
+                  'BIMBINGAN MASYARAKAT',
+                  'PENDIDIKAN AGAMA ISLAM',
+                  'PENYELENGGARA HAJI',
+                ];
+                $isLainnya = isset($surat['tujuan_surat']) && !in_array($surat['tujuan_surat'], $presetTujuan);
+                ?>
+                <select name="tujuan_surat" id="edit_tujuan_surat" class="form-select text-uppercase" required>
+                  <option value="">- Pilih Tujuan Surat -</option>
+                  <?php foreach ($presetTujuan as $opt): ?>
+                    <option value="<?= $opt ?>" <?= (isset($surat['tujuan_surat']) && $surat['tujuan_surat'] == $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                  <?php endforeach; ?>
+                  <option value="Lainnya" <?= $isLainnya ? 'selected' : '' ?>>Lainnya</option>
+                </select>
+                <input type="text" name="tujuan_surat_lainnya" id="edit_tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;" value="<?= $isLainnya ? $surat['tujuan_surat'] : '' ?>">
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    var tujuanSelect = document.getElementById('edit_tujuan_surat');
+                    var tujuanLainnya = document.getElementById('edit_tujuan_surat_lainnya');
+
+                    function toggleLainnya() {
+                      if (tujuanSelect.value === 'Lainnya') {
+                        tujuanLainnya.style.display = '';
+                        tujuanLainnya.required = true;
+                      } else {
+                        tujuanLainnya.style.display = 'none';
+                        tujuanLainnya.required = false;
+                      }
+                    }
+                    tujuanSelect.addEventListener('change', toggleLainnya);
+                    toggleLainnya();
+                  });
+                </script>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer border-top pt-3">
@@ -50,40 +97,3 @@
       </form>
     </div>
   </div>
-</div>
-
-<script>
-  let flatpickrEdit;
-  document.addEventListener('DOMContentLoaded', function() {
-    if (window.flatpickrEdit) {
-      window.flatpickrEdit.setDate(document.getElementById('edit_tanggal_kirim').value, true);
-    }
-    flatpickrEdit = flatpickr("#edit_tanggal_kirim", {
-      dateFormat: "Y-m-d",
-      altInput: true,
-      altFormat: "l, d F Y",
-      allowInput: true
-    });
-    window.flatpickrEdit = flatpickrEdit;
-  });
-
-  const inputFileEdit = document.getElementById("edit_file_surat");
-  const previewFileEdit = document.getElementById("edit_filePreview");
-  // Hindari redeklarasi fileIcons jika sudah ada
-  window.fileIcons = window.fileIcons || {
-    pdf: 'bi-file-earmark-pdf-fill text-danger',
-    doc: 'bi-file-earmark-word-fill text-primary',
-    docx: 'bi-file-earmark-word-fill text-primary',
-    jpg: 'bi-file-earmark-image-fill text-warning',
-    jpeg: 'bi-file-earmark-image-fill text-warning',
-    png: 'bi-file-earmark-image-fill text-warning'
-  };
-  inputFileEdit.addEventListener("change", function () {
-    const file = this.files[0];
-    if (!file) return previewFileEdit.innerHTML = "";
-    const ext = file.name.split('.').pop().toLowerCase();
-    const icon = window.fileIcons[ext] || 'bi-file-earmark-fill text-light';
-    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-    previewFileEdit.innerHTML = `<i class=\"bi ${icon}\"></i> ${file.name} (${sizeMB} MB)`;
-  });
-</script>

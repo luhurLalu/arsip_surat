@@ -16,7 +16,7 @@
         <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
       </div>
       <div class="col-md-6">
-        <label for="pengirim" class="form-label">Pengirim</label>
+        <label for="pengirim" class="form-label">Asal Surat</label>
         <input type="text" name="pengirim" id="pengirim" class="form-control" required>
       </div>
     </div>
@@ -32,10 +32,26 @@
       </div>
     </div>
 
-    <div class="mb-4">
-      <label for="file_surat" class="form-label">Unggah File</label>
-      <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-      <div id="filePreview"></div>
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <label for="file_surat" class="form-label">Unggah File</label>
+        <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        <div id="filePreview"></div> 
+      </div>
+      <div class="col-md-6">
+        <label for="tujuan_surat" class="form-label">Tujuan Surat</label>
+        <select name="tujuan_surat" id="tujuan_surat" class="form-select" required onchange="toggleTujuanLainnya(this)">
+          <option value="">- Pilih Tujuan Surat -</option>
+          <option value="Kepala Kantor">KEPALA KANTOR</option>
+          <option value="KASUBBAG TU">KASUBBAG TU</option>
+          <option value="SETJEN">SEKRETARIAT</option>
+          <option value="BIMAS">BIMBINGAN MASYARAKAT ISLAM</option>
+          <option value="PENDIS">PENDIDIKAN AGAMA ISLAM</option>
+          <option value="PENYELENGGARA HAJI">PENYELENGGARA HAJI</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya...">
+      </div>
     </div>
 
     <div class="d-flex justify-content-between mt-5 mb-2 border-top pt-3">
@@ -49,6 +65,17 @@
 </div>
 
 <script>
+  function toggleTujuanLainnya(select) {
+    var inputLainnya = document.getElementById('tujuan_surat_lainnya');
+    if (select.value === 'Lainnya') {
+      inputLainnya.style.display = '';
+      inputLainnya.required = true;
+    } else {
+      inputLainnya.style.display = 'none';
+      inputLainnya.required = false;
+      inputLainnya.value = '';
+    }
+  }
   document.addEventListener('DOMContentLoaded', function() {
     flatpickr("#tanggal_terima", {
       dateFormat: "Y-m-d",

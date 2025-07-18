@@ -20,9 +20,10 @@
               <input type="text" name="nomor_surat" id="edit_nomor_surat_masuk" class="form-control" readonly required>
             </div>
             <div class="col-md-6">
-              <label for="edit_pengirim" class="form-label">Pengirim</label>
+              <label for="edit_pengirim" class="form-label">Asal Surat</label>
               <input type="text" name="pengirim" id="edit_pengirim" class="form-control text-uppercase" required>
             </div>
+            <!-- tujuan_surat dipindahkan ke bawah, sejajar dengan ganti file -->
           </div>
           <div class="row mb-3">
             <div class="col-md-6">
@@ -35,10 +36,54 @@
             </div>
           </div>
           <div class="mb-4">
-            <label for="edit_file_surat_masuk" class="form-label">Ganti File (Opsional)</label>
-            <input type="file" name="file_surat" id="edit_file_surat_masuk" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-            <div id="edit_filePreview_masuk" class="mt-2 text-info small"></div>
-            <div id="edit_fileLama_masuk" class="form-text text-light mt-1"></div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="edit_file_surat_masuk" class="form-label">Ganti File (Opsional)</label>
+                <input type="file" name="file_surat" id="edit_file_surat_masuk" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                <div id="edit_filePreview_masuk" class="mt-2 text-info small"></div>
+                <div id="edit_fileLama_masuk" class="form-text text-light mt-1"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="edit_tujuan_surat" class="form-label">Tujuan Surat</label>
+                <?php
+                $presetTujuan = [
+                  'KEPALA KANTOR',
+                  'KASUBBAG TU',
+                  'SEKRETARIAT',
+                  'BIMBINGAN MASYARAKAT ISLAM',
+                  'PENDIDIKAN AGAMA ISLAM',
+                  'PENYELENGGARA HAJI',
+                ];
+                $isLainnya = isset($surat['tujuan_surat']) && !in_array($surat['tujuan_surat'], $presetTujuan);
+                ?>
+                <select name="tujuan_surat" id="edit_tujuan_surat" class="form-select text-uppercase" required>
+                  <option value="">- Pilih Tujuan Surat -</option>
+                  <?php foreach ($presetTujuan as $opt): ?>
+                    <option value="<?= $opt ?>" <?= (isset($surat['tujuan_surat']) && $surat['tujuan_surat'] == $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                  <?php endforeach; ?>
+                  <option value="Lainnya" <?= $isLainnya ? 'selected' : '' ?>>Lainnya</option>
+                </select>
+                <input type="text" name="tujuan_surat_lainnya" id="edit_tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;" value="<?= $isLainnya ? $surat['tujuan_surat'] : '' ?>">
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    var tujuanSelect = document.getElementById('edit_tujuan_surat');
+                    var tujuanLainnya = document.getElementById('edit_tujuan_surat_lainnya');
+
+                    function toggleLainnya() {
+                      if (tujuanSelect.value === 'Lainnya') {
+                        tujuanLainnya.style.display = '';
+                        tujuanLainnya.required = true;
+                      } else {
+                        tujuanLainnya.style.display = 'none';
+                        tujuanLainnya.required = false;
+                      }
+                    }
+                    tujuanSelect.addEventListener('change', toggleLainnya);
+                    toggleLainnya(); // initial state
+                  });
+                </script>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer border-top pt-3">
@@ -51,4 +96,3 @@
     </div>
   </div>
 </div>
-

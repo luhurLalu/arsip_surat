@@ -54,7 +54,8 @@
                 <tr>
                     <th class="col-no">No</th>
                     <th class="col-nomor">Nomor Surat</th>
-                    <th class="col-pengirim">Pengirim</th>
+                    <th class="col-pengirim">Asal Surat</th>
+                    <th class="col-tujuan">Tujuan Surat</th>
                     <th class="col-tanggal">Tanggal Terima</th>
                     <th class="col-perihal">Perihal</th>
                     <th class="col-aksi">Aksi</th>
@@ -72,6 +73,9 @@
                     <td class="col-pengirim">
                         <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['pengirim']) ?>"><?= esc($s['pengirim']) ?></span>
                     </td>
+                    <td class="col-tujuan">
+                        <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan_surat']) ?>"><?= esc($s['tujuan_surat']) ?></span>
+                    </td>
                     <td class="text-center"><?= esc($s['tanggal_terima']) ?></td>
                     <td class="col-perihal">
                         <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>"><?= esc($s['perihal']) ?></span>
@@ -83,6 +87,7 @@
                                data-id="<?= $s['id'] ?>"
                                data-nomor="<?= esc($s['nomor_surat']) ?>"
                                data-pengirim="<?= esc($s['pengirim']) ?>"
+                               data-tujuan="<?= esc($s['tujuan_surat']) ?>"
                                data-tanggal="<?= esc($s['tanggal_terima']) ?>"
                                data-perihal="<?= esc($s['perihal']) ?>"
                                data-file="<?= esc($s['file_surat']) ?>"
@@ -158,7 +163,7 @@
             const formHapus = document.getElementById('formHapusSuratMasuk');
             formHapus.setAttribute('action', actionUrl);
         });
-    });
+    }); 
 </script>
 
 <?= $this->endSection() ?>

@@ -55,8 +55,9 @@
         <tr>
           <th class="col-no">No</th>
           <th class="col-nomor">Nomor Surat</th>
-          <th class="col-tujuan">Tujuan</th>
-          <th class="col-tanggal">Tanggal Kirim</th>
+          <th class="col-pengirim">Asal Surat</th>
+          <th class="col-tujuan">Tujuan Surat</th>
+          <th class="col-tanggal">Tanggal Terima</th>
           <th class="col-perihal">Perihal</th>
           <th class="col-aksi">Aksi</th>
         </tr>
@@ -70,7 +71,8 @@
                 <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($surat['nomor_surat']) ?>"><?= esc($surat['nomor_surat']) ?></span>
               </td>
               <td class="col-tujuan"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($surat['tujuan']) ?>"><?= esc($surat['tujuan']) ?></span></td>
-              <td class="text-center"><?= esc($surat['tanggal_tugas']) ?></td>
+              <td class="col-pengirim"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($surat['pengirim'] ?? '-') ?>"><?= esc($surat['pengirim'] ?? '-') ?></span></td>
+              <td class="text-center"><?= esc($surat['tanggal_tugas'] ?? '-') ?></td>
               <td class="col-perihal"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($surat['perihal']) ?>"><?= esc($surat['perihal']) ?></span></td>
               <td class="text-center text-nowrap">
                 <div class="d-flex justify-content-center flex-nowrap gap-1">
@@ -78,7 +80,7 @@
                   <button type="button" class="btn btn-warning btn-sm text-dark btn-edit-surattugas"
                     data-id="<?= $surat['id'] ?>"
                     data-nomor="<?= esc($surat['nomor_surat']) ?>"
-                    data-tujuan="<?= esc($surat['tujuan']) ?>"
+                   data-tujuan="<?= esc($surat['tujuan_surat']) ?>"
                     data-tanggal="<?= esc($surat['tanggal_tugas']) ?>"
                     data-perihal="<?= esc($surat['perihal']) ?>"
                     data-file="<?= esc($surat['file_surat']) ?>"

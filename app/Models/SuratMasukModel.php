@@ -13,6 +13,7 @@ class SuratMasukModel extends Model
     protected $allowedFields = [
         'nomor_surat',
         'pengirim',
+        'tujuan_surat',
         'tanggal_terima',
         'perihal',
         'file_surat'

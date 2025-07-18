@@ -83,8 +83,8 @@ document.addEventListener("DOMContentLoaded", function() {
           <dt class="col-sm-4">Nomor Surat</dt>
                     <dd class="col-sm-8 text-uppercase"><?= esc($surat['nomor_surat']) ?></dd>
 
-          <dt class="col-sm-4">Tujuan</dt>
-                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan']) ?></dd>
+                    <dt class="col-sm-4">Tujuan Surat</dt>
+                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan_surat']) ?></dd>
 
           <dt class="col-sm-4">Tanggal Kirim</dt>
           <dd class="col-sm-8"><?= tanggal_indo($surat['tanggal_kirim']) ?></dd>

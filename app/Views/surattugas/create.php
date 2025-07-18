@@ -14,8 +14,45 @@
         <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
       </div>
       <div class="col-md-6">
-        <label for="tujuan" class="form-label">Tujuan</label>
-        <input type="text" name="tujuan" id="tujuan" class="form-control" required>
+        <label for="tujuan_surat" class="form-label">Tujuan Surat</label> 
+        <?php $presetTujuan = [
+          'KEPALA KANTOR',
+          'KASUBBAG TU',
+          'SEKRETARIAT',
+          'BIMBINGAN MASYARAKAT',
+          'PENDIDIKAN AGAMA ISLAM',
+          'PENYELENGGARA HAJI',
+        ]; ?>
+        <select name="tujuan_surat" id="tujuan_surat" class="form-select text-uppercase" required>
+          <option value="">- Pilih Tujuan Surat -</option>
+          <?php foreach ($presetTujuan as $opt): ?>
+            <option value="<?= $opt ?>"><?= $opt ?></option>
+          <?php endforeach; ?>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;">
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var tujuanSelect = document.getElementById('tujuan_surat');
+          var tujuanLainnya = document.getElementById('tujuan_surat_lainnya');
+          function toggleLainnya() {
+            if (tujuanSelect.value === 'Lainnya') {
+              tujuanLainnya.style.display = '';
+              tujuanLainnya.required = true;
+            } else {
+              tujuanLainnya.style.display = 'none';
+              tujuanLainnya.required = false;
+            }
+          }
+          tujuanSelect.addEventListener('change', toggleLainnya);
+        });
+        </script>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="pengirim" class="form-label">Asal Surat</label>
+        <input type="text" name="pengirim" id="pengirim" class="form-control text-uppercase" required>
       </div>
     </div>
     <div class="row mb-3">

@@ -21,6 +21,11 @@ class CreateSuratTugas extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
             ],
+            'tujuan_surat' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => true,
+            ],
             'tanggal_tugas' => [
                 'type' => 'DATE',
             ],

@@ -32,7 +32,7 @@ class SuratKeluar extends BaseController
         $validation = \Config\Services::validation();
         $rules = [
             'nomor_surat'    => 'required',
-            'tujuan'         => 'required',
+            'tujuan_surat'   => 'required',
             'tanggal_kirim'  => 'required|valid_date',
             'perihal'        => 'required',
             'file_surat'     => 'uploaded[file_surat]|max_size[file_surat,2048]|ext_in[file_surat,pdf,jpg,jpeg,png,gif]'
@@ -43,9 +43,13 @@ class SuratKeluar extends BaseController
         $file = $this->request->getFile('file_surat');
         $fileName = $file->getRandomName();
         $file->move('uploads/suratkeluar', $fileName);
+        $tujuanSurat = $this->request->getPost('tujuan_surat');
+        if ($tujuanSurat === 'Lainnya') {
+            $tujuanSurat = $this->request->getPost('tujuan_surat_lainnya');
+        }
         $this->suratKeluar->save([
             'nomor_surat'   => $this->request->getPost('nomor_surat'),
-            'tujuan'        => $this->request->getPost('tujuan'),
+            'tujuan_surat'  => $tujuanSurat,
             'tanggal_kirim' => $this->request->getPost('tanggal_kirim'),
             'perihal'       => $this->request->getPost('perihal'),
             'file_surat'    => $fileName
@@ -72,16 +76,20 @@ class SuratKeluar extends BaseController
     {
         $rules = [
             'nomor_surat'   => 'required',
-            'tujuan'        => 'required',
+            'tujuan_surat'  => 'required',
             'tanggal_kirim' => 'required|valid_date',
             'perihal'       => 'required',
         ];
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('error', $this->validator->listErrors());
         }
+        $tujuanSurat = $this->request->getPost('tujuan_surat');
+        if ($tujuanSurat === 'Lainnya') {
+            $tujuanSurat = $this->request->getPost('tujuan_surat_lainnya');
+        }
         $data = [
             'nomor_surat'   => $this->request->getPost('nomor_surat'),
-            'tujuan'        => $this->request->getPost('tujuan'),
+            'tujuan_surat'  => $tujuanSurat,
             'tanggal_kirim' => $this->request->getPost('tanggal_kirim'),
             'perihal'       => $this->request->getPost('perihal'),
         ];

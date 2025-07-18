@@ -47,7 +47,7 @@
                     <dd class="col-sm-8 text-uppercase"><?= esc($surat['nomor_surat']) ?></dd>
 
                     <dt class="col-sm-4">Tujuan</dt>
-                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan']) ?></dd>
+                    <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan_surat']) ?></dd>
 
                     <dt class="col-sm-4">Tanggal Tugas</dt>
                     <dd class="col-sm-8"><?= esc($surat['tanggal_tugas']) ?></dd>

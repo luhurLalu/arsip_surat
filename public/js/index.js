@@ -84,8 +84,40 @@ if (formEdit && editButtons.length > 0) {
     btn.addEventListener('click', function (e) {
       document.getElementById('edit_id').value = this.dataset.id;
       document.getElementById('edit_nomor_surat').value = this.dataset.nomor;
-      document.getElementById('edit_tujuan').value = this.dataset.tujuan;
-      setTanggalEditSuratKeluar(this.dataset.tanggal);
+      document.getElementById('edit_pengirim').value = this.dataset.pengirim;
+      document.getElementById('edit_tujuan_surat').value = this.dataset.tujuan;
+      // Handle tujuan_surat_lainnya
+      var presetTujuan = [
+        'KEPALA KANTOR',
+        'KASUBBAG TU',
+        'SEKRETARIAT',
+        'BIMBINGAN MASYARAKAT',
+        'PENDIDIKAN AGAMA ISLAM',
+        'PENYELENGGARA HAJI',
+      ];
+      var tujuanLainnya = document.getElementById('edit_tujuan_surat_lainnya');
+      if (presetTujuan.indexOf(this.dataset.tujuan) === -1 && this.dataset.tujuan) {
+        document.getElementById('edit_tujuan_surat').value = 'Lainnya';
+        tujuanLainnya.style.display = '';
+        tujuanLainnya.required = true;
+        tujuanLainnya.value = this.dataset.tujuan;
+      } else {
+        tujuanLainnya.style.display = 'none';
+        tujuanLainnya.required = false;
+        tujuanLainnya.value = '';
+      }
+      // Flatpickr for tanggal_kirim
+      if (window.flatpickr && document.getElementById('edit_tanggal_kirim')) {
+        flatpickr('#edit_tanggal_kirim', {
+          dateFormat: 'Y-m-d',
+          altInput: true,
+          altFormat: 'l, d F Y',
+          allowInput: true
+        }).setDate(this.dataset.tanggal, true);
+        document.getElementById('edit_tanggal_kirim').value = this.dataset.tanggal;
+      } else {
+        document.getElementById('edit_tanggal_kirim').value = this.dataset.tanggal;
+      }
       document.getElementById('edit_perihal').value = this.dataset.perihal;
       document.getElementById('edit_fileLama').innerHTML = this.dataset.file ? `File lama: <a href='${baseUrl}/uploads/suratkeluar/${this.dataset.file}' target='_blank' class='text-info'>Lihat File</a>` : '';
       formEdit.action = `${baseUrl}/suratkeluar/update/${this.dataset.id}`;
@@ -104,6 +136,7 @@ if (formEditMasuk && editButtonsMasuk.length > 0) {
       document.getElementById('edit_id_masuk').value = this.dataset.id;
       document.getElementById('edit_nomor_surat_masuk').value = this.dataset.nomor;
       document.getElementById('edit_pengirim').value = this.dataset.pengirim;
+      document.getElementById('edit_tujuan_surat').value = this.dataset.tujuan;
       if (window.flatpickr && document.getElementById('edit_tanggal_terima')) {
         flatpickr('#edit_tanggal_terima').setDate(this.dataset.tanggal, true);
         document.getElementById('edit_tanggal_terima').value = this.dataset.tanggal;

@@ -13,6 +13,7 @@ class SuratTugasModel extends Model
     protected $allowedFields = [
         'nomor_surat',
         'tujuan',
+        'tujuan_surat',
         'tanggal_tugas',
         'perihal',
         'file_surat'

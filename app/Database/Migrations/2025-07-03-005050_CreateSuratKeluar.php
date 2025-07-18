@@ -24,6 +24,11 @@ class CreateSuratKeluar extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
             ],
+            'tujuan_surat' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
+            ],
             'tanggal_kirim' => [
                 'type' => 'DATE',
             ],

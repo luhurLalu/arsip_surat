@@ -74,8 +74,11 @@ function tanggal_indo($datetime) {
           <dt class="col-sm-4">Nomor Surat</dt>
           <dd class="col-sm-8 text-uppercase"><?= esc($surat['nomor_surat']) ?></dd>
 
-          <dt class="col-sm-4">Pengirim</dt>
+          <dt class="col-sm-4">Asal Surat</dt>
           <dd class="col-sm-8 text-uppercase"><?= esc($surat['pengirim']) ?></dd>
+
+          <dt class="col-sm-4">Tujuan Surat</dt>
+          <dd class="col-sm-8 text-uppercase"><?= esc($surat['tujuan_surat']) ?></dd>
 
           <dt class="col-sm-4">Tanggal Terima</dt>
           <dd class="col-sm-8"><?= tanggal_indo($surat['tanggal_terima']) ?></dd>

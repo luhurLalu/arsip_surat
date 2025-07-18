@@ -12,6 +12,7 @@ class CreateSuratMasuk extends Migration
             'id'              => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
             'nomor_surat'     => ['type' => 'VARCHAR', 'constraint' => 100],
             'pengirim'        => ['type' => 'VARCHAR', 'constraint' => 100],
+            'tujuan_surat'    => ['type' => 'VARCHAR', 'constraint' => 100],
             'tanggal_terima'  => ['type' => 'DATE'],
             'perihal'         => ['type' => 'TEXT'],
             'file_surat'      => ['type' => 'VARCHAR', 'constraint' => 255],

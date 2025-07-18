@@ -54,8 +54,9 @@
                 <tr>
                     <th class="col-no">No</th>
                     <th class="col-nomor">Nomor Surat</th>
-                    <th class="col-tujuan">Tujuan</th>
-                    <th class="col-tanggal">Tanggal Kirim</th>
+                    <th class="col-pengirim">Asal Surat</th>
+                    <th class="col-tujuan">Tujuan Surat</th>
+                    <th class="col-tanggal">Tanggal Terima</th>
                     <th class="col-perihal">Perihal</th>
                     <th class="col-aksi">Aksi</th>
                 </tr>
@@ -70,10 +71,17 @@
                         <td class="col-nomor">
                             <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>"><?= esc($s['nomor_surat']) ?></span>
                         </td>
-                        <td class="col-tujuan">
-                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan']) ?>"><?= esc($s['tujuan']) ?></span>
+                        <td class="col-pengirim">
+                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan'] ?? '-') ?>">
+                                <?= esc($s['tujuan'] ?? '-') ?>
+                            </span>
                         </td>
-                        <td class="text-center"><?= esc($s['tanggal_kirim']) ?></td>
+                        <td class="col-tujuan">
+                            <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan_surat']) ?>"><?= esc($s['tujuan_surat']) ?></span>
+                        </td>
+                        <td class="text-center">
+                            <?= esc($s['tanggal_kirim'] ?? '-') ?>
+                        </td>
                         <td class="col-perihal">
                             <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>"><?= esc($s['perihal']) ?></span>
                         </td>
@@ -83,7 +91,8 @@
                                 <a href="#" class="btn btn-warning btn-sm text-dark btn-edit-suratkeluar"
                                    data-id="<?= $s['id'] ?>"
                                    data-nomor="<?= esc($s['nomor_surat']) ?>"
-                                   data-tujuan="<?= esc($s['tujuan']) ?>"
+                                   data-pengirim="<?= esc($s['pengirim'] ?? $s['tujuan'] ?? '-') ?>"
+                                   data-tujuan="<?= esc($s['tujuan_surat']) ?>"
                                    data-tanggal="<?= esc($s['tanggal_kirim']) ?>"
                                    data-perihal="<?= esc($s['perihal']) ?>"
                                    data-file="<?= esc($s['file_surat']) ?>"
@@ -119,7 +128,7 @@
         <h5 class="modal-title" id="modalHapusSuratKeluarLabel">Konfirmasi Hapus</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="hapusKeluarModalBody">
+      <div class="modal-body" id="hapusModalBody">
         <!-- Diisi dinamis oleh JS -->
       </div>
       <div class="modal-footer">
@@ -147,7 +156,7 @@
             const actionUrl = button.getAttribute('data-action');
 
             // Update konten modal
-            const modalBody = document.getElementById('hapusKeluarModalBody');
+            const modalBody = document.getElementById('hapusModalBody');
             modalBody.innerHTML = `
                 🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>
                 Nomor: <strong>${nomor}</strong>

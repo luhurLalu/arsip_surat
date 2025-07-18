@@ -1,4 +1,3 @@
-
 <!-- 📝 Modal Edit Surat Tugas -->
 <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
@@ -21,8 +20,47 @@
               <input type="text" name="nomor_surat" id="edit_nomor_surat_tugas" class="form-control" readonly required>
             </div>
             <div class="col-md-6">
-              <label for="edit_tujuan_tugas" class="form-label">Tujuan</label>
-              <input type="text" name="tujuan" id="edit_tujuan_tugas" class="form-control text-uppercase" required>
+              <label for="edit_tujuan_surat" class="form-label">Tujuan Surat</label>
+              <?php
+                $presetTujuan = [
+                  'KEPALA KANTOR',
+                  'KASUBBAG TU',
+                  'SEKRETARIAT',
+                  'BIMBINGAN MASYARAKAT',
+                  'PENDIDIKAN AGAMA ISLAM',
+                  'PENYELENGGARA HAJI',
+                ];
+                $isLainnya = isset($surat['tujuan_surat']) && !in_array($surat['tujuan_surat'], $presetTujuan);
+              ?>
+              <select name="tujuan_surat" id="edit_tujuan_surat" class="form-select text-uppercase" required>
+                <option value="">- Pilih Tujuan Surat -</option>
+                <?php foreach ($presetTujuan as $opt): ?>
+                  <option value="<?= $opt ?>" <?= (isset($surat['tujuan_surat']) && $surat['tujuan_surat'] == $opt) ? 'selected' : '' ?>><?= $opt ?></option>
+                <?php endforeach; ?>
+                <option value="Lainnya" <?= $isLainnya ? 'selected' : '' ?>>Lainnya</option>
+              </select>
+              <input type="text" name="tujuan_surat_lainnya" id="edit_tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;" value="<?= $isLainnya ? $surat['tujuan_surat'] : '' ?>">
+              <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                var tujuanSelect = document.getElementById('edit_tujuan_surat');
+                var tujuanLainnya = document.getElementById('edit_tujuan_surat_lainnya');
+                function toggleLainnya() {
+                  if (tujuanSelect.value === 'Lainnya') {
+                    tujuanLainnya.style.display = '';
+                    tujuanLainnya.required = true;
+                  } else {
+                    tujuanLainnya.style.display = 'none';
+                    tujuanLainnya.required = false;
+                  }
+                }
+                tujuanSelect.addEventListener('change', toggleLainnya);
+                toggleLainnya();
+              });
+              </script>
+            </div>
+            <div class="col-md-6">
+              <label for="edit_pengirim_tugas" class="form-label">Asal Surat</label>
+              <input type="text" name="pengirim" id="edit_pengirim_tugas" class="form-control text-uppercase" required value="<?= isset($surat['pengirim']) ? esc($surat['pengirim']) : '' ?>">
             </div>
           </div>
           <div class="row mb-3">
