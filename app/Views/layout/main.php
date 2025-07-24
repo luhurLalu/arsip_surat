@@ -130,6 +130,11 @@
                       <i class="bi bi-envelope-paper"></i> Surat Keluar
                     </a>
                   </li>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="<?= base_url('surattugas/cleanup') ?>">
+                      <i class="bi bi-briefcase"></i> Surat Tugas
+                    </a>
+                  </li>
                 </ul>
               </li>
               <li>

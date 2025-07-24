@@ -87,7 +87,7 @@ if (formEdit && editButtons.length > 0) {
       document.getElementById('edit_pengirim').value = this.dataset.pengirim;
       document.getElementById('edit_tujuan_surat').value = this.dataset.tujuan;
       // Handle tujuan_surat_lainnya
-      var presetTujuan = [
+      var presetTujuan = [ 
         'KEPALA KANTOR',
         'KASUBBAG TU',
         'SEKRETARIAT',
@@ -157,7 +157,7 @@ const hapusModalBody = document.getElementById('hapusModalBody');
 const formHapus = document.getElementById('formHapusSuratKeluar');
 if (hapusButtons.length > 0 && hapusModal && hapusModalBody && formHapus) {
   hapusButtons.forEach(btn => {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
       const editModal = document.getElementById('modalEditSuratKeluar');
       if (editModal && editModal.classList.contains('show')) {
         const instance = bootstrap.Modal.getInstance(editModal);
@@ -170,6 +170,7 @@ if (hapusButtons.length > 0 && hapusModal && hapusModalBody && formHapus) {
       }
       hapusModalBody.innerHTML = `🗑️ Hapus surat ke <strong>${this.dataset.tujuan}</strong>?<br>Nomor: <strong>${this.dataset.nomor}</strong>`;
       formHapus.action = this.dataset.action;
+      // Biarkan Bootstrap yang handle modal
     });
   });
 }

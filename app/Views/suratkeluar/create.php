@@ -7,26 +7,34 @@
     <i class="bi bi-plus-circle-fill text-info"></i> Tambah Surat Keluar
   </h4>
 
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <?= session()->getFlashdata('error') ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <?php endif; ?>
+
   <form action="<?= base_url('suratkeluar/store') ?>" method="post" enctype="multipart/form-data" class="form-dark">
 
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="nomor_surat" class="form-label">Nomor Surat</label>
-        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
+        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required value="<?= old('nomor_surat') ?>">
       </div>
       <div class="col-md-6">
         <label for="pengirim" class="form-label">Asal Surat</label>
-        <input type="text" name="pengirim" id="pengirim" class="form-control text-uppercase" required>
+        <input type="text" name="pengirim" id="pengirim" class="form-control text-uppercase" required value="<?= old('pengirim') ?>">
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="tanggal_kirim" class="form-label">Tanggal Kirim</label>
-        <input type="text" name="tanggal_kirim" id="tanggal_kirim" class="form-control" required>
+        <input type="text" name="tanggal_kirim" id="tanggal_kirim" class="form-control" required value="<?= old('tanggal_kirim') ?>">
       </div>
       <div class="col-md-6">
         <label for="perihal" class="form-label">Perihal</label>
-        <input type="text" name="perihal" id="perihal" class="form-control" required>
+        <input type="text" name="perihal" id="perihal" class="form-control" required value="<?= old('perihal') ?>">
       </div>
     </div>
     <div class="mb-4">
@@ -39,16 +47,16 @@
         <div class="col-md-6">
           <label for="tujuan_surat" class="form-label">Tujuan Surat</label>
           <select name="tujuan_surat" id="tujuan_surat" class="form-select" required onchange="toggleTujuanLainnya(this)">
-            <option value="">- Pilih Tujuan Surat -</option>
-            <option value="Kepala Kantor">KEPALA KANTOR</option>
-            <option value="KASUBBAG TU">KASUBBAG TU</option>
-            <option value="SETJEN">SEKRETARIAT</option>
-            <option value="BIMAS">BIMBINGAN MASYARAKAT ISLAM</option>
-            <option value="PENDIS">PENDIDIKAN AGAMA ISLAM</option>
-            <option value="PENYELENGGARA HAJI">PENYELENGGARA HAJI</option>
-            <option value="Lainnya">Lainnya</option>
+            <option value="">- PILIH TUJUAN SURAT -</option>
+            <option value="KEPALA KANTOR" <?= old('tujuan_surat')=='KEPALA KANTOR'?'selected':'' ?>>KEPALA KANTOR</option>
+            <option value="KASUBBAG TU" <?= old('tujuan_surat')=='KASUBBAG TU'?'selected':'' ?>>KASUBBAG TU</option>
+            <option value="SEKRETARIAT" <?= old('tujuan_surat')=='SEKRETARIAT'?'selected':'' ?>>SEKRETARIAT</option>
+            <option value="BIMBINGAN MASYARAKAT" <?= old('tujuan_surat')=='BIMBINGAN MASYARAKAT'?'selected':'' ?>>BIMBINGAN MASYARAKAT</option>
+            <option value="PENDIDIKAN AGAMA ISLAM" <?= old('tujuan_surat')=='PENDIDIKAN AGAMA ISLAM'?'selected':'' ?>>PENDIDIKAN AGAMA ISLAM</option>
+            <option value="PENYELENGGARA HAJI" <?= old('tujuan_surat')=='PENYELENGGARA HAJI'?'selected':'' ?>>PENYELENGGARA HAJI</option>
+            <option value="LAINNYA" <?= old('tujuan_surat')=='LAINNYA'?'selected':'' ?>>LAINNYA</option>
           </select>
-          <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya...">
+          <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya..." value="<?= old('tujuan_surat_lainnya') ?>">
         </div>
       </div>
     </div>

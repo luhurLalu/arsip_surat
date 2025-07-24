@@ -49,9 +49,18 @@
 
     <!-- 📝 Tabel Surat Keluar -->
     <div class="table-responsive">
+        <form id="formBulkDeleteKeluar" method="post" action="<?= base_url('suratkeluar/bulkdelete') ?>">
+        <div class="mb-2 d-flex justify-content-end">
+            <button type="button" class="btn btn-danger btn-sm d-none" id="btnBulkDeleteKeluar" data-bs-toggle="modal" data-bs-target="#modalBulkDeleteKeluar">
+                <i class="bi bi-trash-fill"></i> Hapus Terpilih
+            </button>
+        </div>
         <table class="table table-dark table-bordered table-hover align-middle" id="suratTable">
             <thead class="table-light text-center">
                 <tr>
+                    <th class="col-check" style="width:32px;padding:0;vertical-align:middle;">
+                        <input type="checkbox" id="selectAllKeluar" class="form-check-input m-0" style="width:18px;height:18px;background-color:#fff;border:2px solid #888;box-shadow:0 0 2px #000;">
+                    </th>
                     <th class="col-no">No</th>
                     <th class="col-nomor">Nomor Surat</th>
                     <th class="col-pengirim">Asal Surat</th>
@@ -67,6 +76,9 @@
                 $no = 1;
                 foreach ($suratkeluar as $s): ?>
                     <tr class="paginated">
+                        <td class="text-center" style="width:32px;padding:0;vertical-align:middle;">
+                            <input type="checkbox" class="rowCheckboxKeluar form-check-input m-0" name="ids[]" value="<?= $s['id'] ?>" style="width:18px;height:18px;">
+                        </td>
                         <td class="text-center"><?= $no++ ?></td>
                         <td class="col-nomor">
                             <span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>"><?= esc($s['nomor_surat']) ?></span>
@@ -114,13 +126,35 @@
                 <?php endforeach ?>
             </tbody>
         </table>
+        </form>
+<!-- 🧨 Modal Hapus BULK Surat Keluar -->
+<div class="modal fade" id="modalBulkDeleteKeluar" tabindex="-1" aria-labelledby="modalBulkDeleteKeluarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-danger">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalBulkDeleteKeluarLabel">Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        🗑️ <strong>Hapus Item yg Dipilih?</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="confirmBulkDeleteKeluar">Ya, Hapus</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
     </div>
 </div>
+
 
 <!-- 📝 Modal Edit Surat Keluar -->
 <?= view('suratkeluar/modal_edit') ?>
 
-<!-- 🧨 Modal Hapus GLOBAL -->
+</div>
+
+<!-- 🧨 Modal Hapus GLOBAL (pindah ke luar container) -->
 <div class="modal fade" id="modalHapusSuratKeluar" tabindex="-1" aria-labelledby="modalHapusSuratKeluarLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white border-danger">
@@ -143,10 +177,10 @@
 </div>
 
 <!-- 🔌 Panggil JS modular -->
-
 <script>
-    // Script untuk mengisi konten modal hapus surat keluar
+    // Checkbox select all & enable bulk delete Surat Keluar
     document.addEventListener('DOMContentLoaded', function () {
+        // Modal hapus satuan
         const modalHapus = document.getElementById('modalHapusSuratKeluar');
         modalHapus.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget; // Tombol yang memicu modal
@@ -154,18 +188,45 @@
             const tujuan = button.getAttribute('data-tujuan');
             const nomor = button.getAttribute('data-nomor');
             const actionUrl = button.getAttribute('data-action');
-
             // Update konten modal
             const modalBody = document.getElementById('hapusModalBody');
             modalBody.innerHTML = `
                 🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>
                 Nomor: <strong>${nomor}</strong>
             `;
-
             // Update action form
             const formHapus = document.getElementById('formHapusSuratKeluar');
             formHapus.setAttribute('action', actionUrl);
         });
+
+        // Bulk delete logic
+        const selectAll = document.getElementById('selectAllKeluar');
+        const rowCheckboxes = document.querySelectorAll('.rowCheckboxKeluar');
+        const btnBulkDelete = document.getElementById('btnBulkDeleteKeluar');
+        const confirmBulkDelete = document.getElementById('confirmBulkDeleteKeluar');
+        function updateBulkDeleteVisibility() {
+            const checked = Array.from(rowCheckboxes).some(cb => cb.checked);
+            btnBulkDelete.classList.toggle('d-none', !checked);
+        }
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);
+                updateBulkDeleteVisibility();
+            });
+        }
+        rowCheckboxes.forEach(cb => {
+            cb.addEventListener('change', function () {
+                updateBulkDeleteVisibility();
+                if (selectAll) selectAll.checked = Array.from(rowCheckboxes).every(cb => cb.checked);
+            });
+        });
+        // Submit bulk delete hanya setelah konfirmasi di modal
+        if (confirmBulkDelete) {
+            confirmBulkDelete.addEventListener('click', function () {
+                document.getElementById('formBulkDeleteKeluar').submit();
+            });
+        }
+        updateBulkDeleteVisibility();
     });
 </script>
 

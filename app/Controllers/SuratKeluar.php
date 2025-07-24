@@ -40,6 +40,14 @@ class SuratKeluar extends BaseController
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('error', $validation->listErrors());
         }
+
+        // Validasi nomor surat unik
+        $nomorSurat = $this->request->getPost('nomor_surat');
+        $existing = $this->suratKeluar->where('nomor_surat', $nomorSurat)->first();
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Nomor surat sudah ada di database, silakan gunakan nomor lain.');
+        }
+
         $file = $this->request->getFile('file_surat');
         $fileName = $file->getRandomName();
         $file->move('uploads/suratkeluar', $fileName);
@@ -48,7 +56,7 @@ class SuratKeluar extends BaseController
             $tujuanSurat = $this->request->getPost('tujuan_surat_lainnya');
         }
         $this->suratKeluar->save([
-            'nomor_surat'   => $this->request->getPost('nomor_surat'),
+            'nomor_surat'   => $nomorSurat,
             'tujuan_surat'  => $tujuanSurat,
             'tanggal_kirim' => $this->request->getPost('tanggal_kirim'),
             'perihal'       => $this->request->getPost('perihal'),
@@ -129,5 +137,30 @@ class SuratKeluar extends BaseController
         }
 
         return redirect()->to('suratkeluar')->with('success', 'File tak terpakai berhasil dibersihkan.');
+    }
+
+    // Bulk delete Surat Keluar
+    public function bulkdelete()
+    {
+        $ids = $this->request->getPost('ids');
+        if (!$ids || !is_array($ids)) {
+            return redirect()->to('suratkeluar')->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $deleted = 0;
+        foreach ($ids as $id) {
+            $surat = $this->suratKeluar->find($id);
+            if ($surat) {
+                if ($surat['file_surat'] && file_exists('uploads/suratkeluar/' . $surat['file_surat'])) {
+                    unlink('uploads/suratkeluar/' . $surat['file_surat']);
+                }
+                $this->suratKeluar->delete($id);
+                $deleted++;
+            }
+        }
+        if ($deleted > 0) {
+            return redirect()->to('suratkeluar')->with('success', "$deleted data berhasil dihapus.");
+        } else {
+            return redirect()->to('suratkeluar')->with('error', 'Tidak ada data yang dihapus.');
+        }
     }
 }

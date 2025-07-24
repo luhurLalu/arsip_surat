@@ -8,6 +8,27 @@ class SuratMasuk extends BaseController
 {
     protected $suratMasuk;
 
+    // Hapus banyak data sekaligus
+    public function bulkdelete()
+    {
+        $ids = $this->request->getPost('ids');
+        if (!$ids || !is_array($ids)) {
+            return redirect()->to('suratmasuk')->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $deleted = 0;
+        foreach ($ids as $id) {
+            $surat = $this->suratMasuk->find($id);
+            if ($surat) {
+                if (!empty($surat['file_surat']) && file_exists('uploads/suratmasuk/' . $surat['file_surat'])) {
+                    unlink('uploads/suratmasuk/' . $surat['file_surat']);
+                }
+                $this->suratMasuk->delete($id);
+                $deleted++;
+            }
+        }
+        return redirect()->to('suratmasuk')->with('success', $deleted . ' surat berhasil dihapus.');
+    }
+
 
 
     public function __construct()
@@ -37,6 +58,13 @@ class SuratMasuk extends BaseController
             return redirect()->back()->withInput()->with('error', $validation->listErrors());
         }
 
+        // Validasi nomor surat unik
+        $nomorSurat = $this->request->getPost('nomor_surat');
+        $existing = $this->suratMasuk->where('nomor_surat', $nomorSurat)->first();
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Nomor surat sudah ada di database, silakan gunakan nomor lain.');
+        }
+
         $file = $this->request->getFile('file_surat');
         $fileName = $file->getRandomName();
         $file->move('uploads/suratmasuk', $fileName);
@@ -47,7 +75,7 @@ class SuratMasuk extends BaseController
         }
 
         $this->suratMasuk->save([
-            'nomor_surat'    => $this->request->getPost('nomor_surat'),
+            'nomor_surat'    => $nomorSurat,
             'pengirim'       => $this->request->getPost('pengirim'),
             'tujuan_surat'   => $tujuanSurat,
             'tanggal_terima' => $this->request->getPost('tanggal_terima'),

@@ -8,27 +8,35 @@
     <i class="bi bi-plus-circle-fill text-info"></i> Tambah Surat Masuk
   </h4>
 
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <?= session()->getFlashdata('error') ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <?php endif; ?>
+
   <form action="<?= base_url('suratmasuk/store') ?>" method="post" enctype="multipart/form-data" class="form-dark">
 
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="nomor_surat" class="form-label">Nomor Surat</label>
-        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
+        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required value="<?= old('nomor_surat') ?>">
       </div>
       <div class="col-md-6">
         <label for="pengirim" class="form-label">Asal Surat</label>
-        <input type="text" name="pengirim" id="pengirim" class="form-control" required>
+        <input type="text" name="pengirim" id="pengirim" class="form-control" required value="<?= old('pengirim') ?>">
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="tanggal_terima" class="form-label">Tanggal Terima</label>
-        <input type="text" name="tanggal_terima" id="tanggal_terima" class="form-control" required>
+        <input type="text" name="tanggal_terima" id="tanggal_terima" class="form-control" required value="<?= old('tanggal_terima') ?>">
       </div>
       <div class="col-md-6">
         <label for="perihal" class="form-label">Perihal</label>
-        <input type="text" name="perihal" id="perihal" class="form-control" required>
+        <input type="text" name="perihal" id="perihal" class="form-control" required value="<?= old('perihal') ?>">
       </div>
     </div>
 
@@ -42,15 +50,15 @@
         <label for="tujuan_surat" class="form-label">Tujuan Surat</label>
         <select name="tujuan_surat" id="tujuan_surat" class="form-select" required onchange="toggleTujuanLainnya(this)">
           <option value="">- Pilih Tujuan Surat -</option>
-          <option value="Kepala Kantor">KEPALA KANTOR</option>
-          <option value="KASUBBAG TU">KASUBBAG TU</option>
-          <option value="SETJEN">SEKRETARIAT</option>
-          <option value="BIMAS">BIMBINGAN MASYARAKAT ISLAM</option>
-          <option value="PENDIS">PENDIDIKAN AGAMA ISLAM</option>
-          <option value="PENYELENGGARA HAJI">PENYELENGGARA HAJI</option>
-          <option value="Lainnya">Lainnya</option>
+          <option value="Kepala Kantor" <?= old('tujuan_surat')=='Kepala Kantor'?'selected':'' ?>>KEPALA KANTOR</option>
+          <option value="KASUBBAG TU" <?= old('tujuan_surat')=='KASUBBAG TU'?'selected':'' ?>>KASUBBAG TU</option>
+          <option value="SETJEN" <?= old('tujuan_surat')=='SETJEN'?'selected':'' ?>>SEKRETARIAT</option>
+          <option value="BIMAS" <?= old('tujuan_surat')=='BIMAS'?'selected':'' ?>>BIMBINGAN MASYARAKAT ISLAM</option>
+          <option value="PENDIS" <?= old('tujuan_surat')=='PENDIS'?'selected':'' ?>>PENDIDIKAN AGAMA ISLAM</option>
+          <option value="PENYELENGGARA HAJI" <?= old('tujuan_surat')=='PENYELENGGARA HAJI'?'selected':'' ?>>PENYELENGGARA HAJI</option>
+          <option value="Lainnya" <?= old('tujuan_surat')=='Lainnya'?'selected':'' ?>>Lainnya</option>
         </select>
-        <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya...">
+        <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control mt-2" style="display:none;" placeholder="Isi tujuan surat lainnya..." value="<?= old('tujuan_surat_lainnya') ?>">
       </div>
     </div>
 

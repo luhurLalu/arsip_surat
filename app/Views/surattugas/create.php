@@ -7,68 +7,78 @@
     <i class="bi bi-plus-circle-fill text-success"></i> Tambah Surat Tugas
   </h4>
 
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <?= session()->getFlashdata('error') ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <?php endif; ?>
+
   <form action="<?= base_url('surattugas/store') ?>" method="post" enctype="multipart/form-data" class="form-dark">
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="nomor_surat" class="form-label">Nomor Surat</label>
-        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required>
+        <input type="text" name="nomor_surat" id="nomor_surat" class="form-control" required value="<?= old('nomor_surat') ?>">
       </div>
       <div class="col-md-6">
-        <label for="tujuan_surat" class="form-label">Tujuan Surat</label> 
-        <?php $presetTujuan = [
-          'KEPALA KANTOR',
-          'KASUBBAG TU',
-          'SEKRETARIAT',
-          'BIMBINGAN MASYARAKAT',
-          'PENDIDIKAN AGAMA ISLAM',
-          'PENYELENGGARA HAJI',
-        ]; ?>
-        <select name="tujuan_surat" id="tujuan_surat" class="form-select text-uppercase" required>
-          <option value="">- Pilih Tujuan Surat -</option>
-          <?php foreach ($presetTujuan as $opt): ?>
-            <option value="<?= $opt ?>"><?= $opt ?></option>
-          <?php endforeach; ?>
-          <option value="Lainnya">Lainnya</option>
-        </select>
-        <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;">
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          var tujuanSelect = document.getElementById('tujuan_surat');
-          var tujuanLainnya = document.getElementById('tujuan_surat_lainnya');
-          function toggleLainnya() {
-            if (tujuanSelect.value === 'Lainnya') {
-              tujuanLainnya.style.display = '';
-              tujuanLainnya.required = true;
-            } else {
-              tujuanLainnya.style.display = 'none';
-              tujuanLainnya.required = false;
-            }
-          }
-          tujuanSelect.addEventListener('change', toggleLainnya);
-        });
-        </script>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="pengirim" class="form-label">Asal Surat</label>
-        <input type="text" name="pengirim" id="pengirim" class="form-control text-uppercase" required>
+        <label for="tujuan" class="form-label">Asal Surat</label>
+        <input type="text" name="tujuan" id="tujuan" class="form-control text-uppercase" required value="<?= old('tujuan') ?>">
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="tanggal_tugas" class="form-label">Tanggal Tugas</label>
-        <input type="text" name="tanggal_tugas" id="tanggal_tugas" class="form-control" required>
+        <input type="text" name="tanggal_tugas" id="tanggal_tugas" class="form-control" required value="<?= old('tanggal_tugas') ?>">
       </div>
       <div class="col-md-6">
         <label for="perihal" class="form-label">Perihal</label>
-        <input type="text" name="perihal" id="perihal" class="form-control" required>
+        <input type="text" name="perihal" id="perihal" class="form-control" required value="<?= old('perihal') ?>">
       </div>
     </div>
     <div class="mb-4">
-      <label for="file_surat" class="form-label">File Surat (PDF/JPG/PNG/GIF, max 2MB)</label>
-      <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif">
-      <div id="filePreview"></div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="file_surat" class="form-label">File Surat (PDF/JPG/PNG/GIF, max 2MB)</label>
+          <input type="file" name="file_surat" id="file_surat" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif">
+          <div id="filePreview"></div>
+        </div>
+        <div class="col-md-6">
+          <label for="tujuan_surat" class="form-label">Tujuan Surat</label>
+          <?php $presetTujuan = [
+            'KEPALA KANTOR',
+            'KASUBBAG TU',
+            'SEKRETARIAT',
+            'BIMBINGAN MASYARAKAT',
+            'PENDIDIKAN AGAMA ISLAM',
+            'PENYELENGGARA HAJI',
+          ]; ?>
+          <select name="tujuan_surat" id="tujuan_surat" class="form-select text-uppercase" required>
+            <option value="">- Pilih Tujuan Surat -</option>
+            <?php foreach ($presetTujuan as $opt): ?>
+              <option value="<?= $opt ?>" <?= old('tujuan_surat')==$opt?'selected':'' ?>><?= $opt ?></option>
+            <?php endforeach; ?>
+            <option value="Lainnya" <?= old('tujuan_surat')=='Lainnya'?'selected':'' ?>>Lainnya</option>
+          </select>
+          <input type="text" name="tujuan_surat_lainnya" id="tujuan_surat_lainnya" class="form-control text-uppercase mt-2" placeholder="Isi tujuan surat lainnya..." style="display:none;" value="<?= old('tujuan_surat_lainnya') ?>">
+          <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var tujuanSelect = document.getElementById('tujuan_surat');
+            var tujuanLainnya = document.getElementById('tujuan_surat_lainnya');
+            function toggleLainnya() {
+              if (tujuanSelect.value === 'Lainnya') {
+                tujuanLainnya.style.display = '';
+                tujuanLainnya.required = true;
+              } else {
+                tujuanLainnya.style.display = 'none';
+                tujuanLainnya.required = false;
+              }
+            }
+            tujuanSelect.addEventListener('change', toggleLainnya);
+          });
+          </script>
+        </div>
+      </div>
     </div>
     <div class="d-flex justify-content-between mt-5 mb-2 border-top pt-3">
       <a href="<?= base_url('surattugas') ?>" class="btn btn-secondary btn-sm">← Batal</a>
