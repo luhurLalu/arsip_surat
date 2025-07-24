@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
   <!-- Style Pendukung Layout -->
-  <!-- Style kustom dipindahkan ke public/css/style.css -->
+  <!-- Style kustom dipindahkan ke public/css/style.css --> 
 </head>
 <body<?= service('uri')->getSegment(1) === '' || service('uri')->getSegment(1) === 'dashboard' ? ' class="dashboard-page"' : '' ?>>
 

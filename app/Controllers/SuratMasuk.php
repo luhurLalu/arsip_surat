@@ -97,9 +97,8 @@ class SuratMasuk extends BaseController
                     ->orLike('perihal', $keyword);
         }
 
-        $surat = $builder->orderBy('tanggal_terima', 'DESC')->findAll();
-        // usort tidak perlu lagi karena sudah orderBy di query
-        $data['surat'] = $surat;
+        $suratmasuk = $builder->orderBy('tanggal_terima', 'DESC')->findAll();
+        $data['suratmasuk'] = $suratmasuk;
         $data['keyword'] = $keyword;
         return view('suratmasuk/index', $data);
     }

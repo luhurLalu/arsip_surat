@@ -1,6 +1,21 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
+<style>
+/* Tombol Hapus Terpilih animasi smooth dan keren, sama seperti surat masuk */
+/* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas */
+.bulkdelete-anim {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+}
+.bulkdelete-anim.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+</style>
 
 <div class="container mt-3">
     <!-- ✅ Toast Notification -->
@@ -33,9 +48,16 @@
 
     <!-- 🔍 Live Search & Pagination -->
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3 gap-2">
-        <div class="input-group search-group">
-            <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, tujuan, atau perihal...">
+        <div class="d-flex align-items-center gap-2 flex-wrap" style="flex:1;">
+            <div class="input-group search-group">
+                <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, tujuan, atau perihal...">
+            </div>
+            <div style="min-width:38px;display:flex;align-items:center;">
+                <button type="button" class="btn btn-danger btn-sm bulkdelete-anim d-none" id="btnBulkDeleteKeluar" data-bs-toggle="modal" data-bs-target="#modalBulkDeleteKeluar" style="margin-left:8px;">
+                    <i class="bi bi-trash-fill"></i> Hapus Terpilih
+                </button>
+            </div>
         </div>
         <nav>
             <ul class="pagination mb-0" id="paginationControls"></ul>
@@ -50,11 +72,7 @@
     <!-- 📝 Tabel Surat Keluar -->
     <div class="table-responsive">
         <form id="formBulkDeleteKeluar" method="post" action="<?= base_url('suratkeluar/bulkdelete') ?>">
-        <div class="mb-2 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger btn-sm d-none" id="btnBulkDeleteKeluar" data-bs-toggle="modal" data-bs-target="#modalBulkDeleteKeluar">
-                <i class="bi bi-trash-fill"></i> Hapus Terpilih
-            </button>
-        </div>
+        <!-- Tombol hapus terpilih hanya di header, tidak perlu di sini lagi -->
         <table class="table table-dark table-bordered table-hover align-middle" id="suratTable">
             <thead class="table-light text-center">
                 <tr>
@@ -206,7 +224,24 @@
         const confirmBulkDelete = document.getElementById('confirmBulkDeleteKeluar');
         function updateBulkDeleteVisibility() {
             const checked = Array.from(rowCheckboxes).some(cb => cb.checked);
-            btnBulkDelete.classList.toggle('d-none', !checked);
+            // Smooth animation sama seperti surat masuk
+            if (checked) {
+                btnBulkDelete.classList.remove('d-none');
+                btnBulkDelete.classList.add('show');
+            } else {
+                btnBulkDelete.classList.remove('show');
+                setTimeout(() => {
+                    if (!btnBulkDelete.classList.contains('show')) {
+                        btnBulkDelete.classList.add('d-none');
+                    }
+                }, 450);
+            }
+            // Disable semua tombol hapus di kolom aksi jika ada yang dicentang
+            document.querySelectorAll('.btn-hapus-suratkeluar').forEach(btn => {
+                btn.disabled = checked;
+                btn.classList.toggle('opacity-50', checked);
+                btn.classList.toggle('pointer-events-none', checked);
+            });
         }
         if (selectAll) {
             selectAll.addEventListener('change', function () {

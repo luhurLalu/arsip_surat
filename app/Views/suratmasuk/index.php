@@ -2,6 +2,7 @@
 <?= $this->extend('layout/main') ?>
 <link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 <style>
+/* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas dan keluar */
 .bulkdelete-anim {
     opacity: 0;
     transform: translateY(-10px);
@@ -52,8 +53,8 @@
                 <span class="input-group-text bg-dark text-white"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control text-uppercase" id="searchInput" placeholder="Cari berdasarkan nomor, pengirim, atau perihal...">
             </div>
-            <div style="min-width:38px;">
-                <button type="button" class="btn btn-danger btn-sm bulkdelete-anim d-none" id="btnBulkDelete" data-bs-toggle="modal" data-bs-target="#modalBulkDelete">
+            <div style="min-width:38px;display:flex;align-items:center;">
+                <button type="button" class="btn btn-danger btn-sm bulkdelete-anim d-none" id="btnBulkDelete" data-bs-toggle="modal" data-bs-target="#modalBulkDelete" style="margin-left:8px;">
                     <i class="bi bi-trash-fill"></i> Hapus Terpilih
                 </button>
             </div>
@@ -71,10 +72,7 @@
     <!-- 📝 Tabel Surat Masuk -->
     <div class="table-responsive">
         <form id="formBulkDelete" method="post" action="<?= base_url('suratmasuk/bulkdelete') ?>">
-        <div class="mb-2 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger btn-sm d-none" id="btnBulkDelete" data-bs-toggle="modal" data-bs-target="#modalBulkDelete">
-                <i class="bi bi-trash-fill"></i> Hapus Terpilih
-            </button>
+        <!-- Tombol hapus terpilih hanya di header, tidak perlu di sini lagi -->
 <!-- 🧨 Modal Hapus BULK -->
 <div class="modal fade" id="modalBulkDelete" tabindex="-1" aria-labelledby="modalBulkDeleteLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -111,12 +109,12 @@
             </thead>
             <tbody>
                 <?php if (isset($suratmasuk) && is_array($suratmasuk)): ?>
-                <?php foreach ($suratmasuk as $s): ?>
+                <?php $no = 1; foreach ($suratmasuk as $s): ?>
                 <tr>
                     <td class="text-center" style="width:32px;padding:0;vertical-align:middle;">
                         <input type="checkbox" class="rowCheckbox form-check-input m-0" name="ids[]" value="<?= $s['id'] ?>" style="width:18px;height:18px;">
                     </td>
-                    <td class="text-center">...</td>
+                    <td class="text-center"><?= $no++ ?></td>
                     <td class="col-nomor"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['nomor_surat']) ?>"><?= esc($s['nomor_surat']) ?></span></td>
                     <td class="col-pengirim"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['pengirim']) ?>"><?= esc($s['pengirim']) ?></span></td>
                     <td class="col-tujuan"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['tujuan_surat']) ?>"><?= esc($s['tujuan_surat']) ?></span></td>
@@ -124,6 +122,7 @@
                     <td class="col-perihal"><span class="truncate-text" data-bs-toggle="tooltip" title="<?= esc($s['perihal']) ?>"><?= esc($s['perihal']) ?></span></td>
                     <td class="text-center text-nowrap">
                         <div class="d-flex justify-content-center flex-wrap gap-1">
+                            <a href="<?= base_url('suratmasuk/detail/' . $s['id']) ?>" class="btn btn-info btn-sm text-white"><i class="bi bi-eye-fill"></i></a>
                             <a href="#" class="btn btn-warning btn-sm text-dark btn-edit-suratmasuk"
                                data-id="<?= $s['id'] ?>"
                                data-nomor="<?= esc($s['nomor_surat']) ?>"
@@ -211,6 +210,12 @@
                 }
             }, 300);
         }
+        // Disable semua tombol hapus di kolom aksi jika ada yang dicentang
+        document.querySelectorAll('.btn-hapus-suratmasuk').forEach(btn => {
+            btn.disabled = checked;
+            btn.classList.toggle('opacity-50', checked);
+            btn.classList.toggle('pointer-events-none', checked);
+        });
     }
         selectAll.addEventListener('change', function () {
             rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);

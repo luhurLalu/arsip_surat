@@ -1,6 +1,5 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
 
 <div class="container py-4">
   <!-- ✅ Toast Notification -->
@@ -211,6 +210,12 @@
           }
         }, 300);
       }
+      // Disable semua tombol hapus di kolom aksi jika ada yang dicentang
+      document.querySelectorAll('.btn-hapus-surattugas').forEach(btn => {
+        btn.disabled = checked;
+        btn.classList.toggle('opacity-50', checked);
+        btn.classList.toggle('pointer-events-none', checked);
+      });
     }
     if (selectAll) {
       selectAll.addEventListener('change', function () {
