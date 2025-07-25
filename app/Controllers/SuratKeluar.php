@@ -139,7 +139,7 @@ class SuratKeluar extends BaseController
         return redirect()->to('suratkeluar')->with('success', 'File tak terpakai berhasil dibersihkan.');
     }
 
-    // Bulk delete Surat Keluar
+    // Bulk delete Surat Keluar 
     public function bulkdelete()
     {
         $ids = $this->request->getPost('ids');

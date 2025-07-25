@@ -18,7 +18,7 @@ class SuratTugasModel extends Model
         'perihal',
         'file_surat'
     ];
-
+ 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

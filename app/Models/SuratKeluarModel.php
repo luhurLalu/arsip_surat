@@ -18,7 +18,7 @@ class SuratKeluarModel extends Model
         'perihal',
         'file_surat'
     ];
-
+ 
     // Aktifkan otomatis timestamp
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

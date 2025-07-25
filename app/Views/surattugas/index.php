@@ -125,172 +125,176 @@
         </tbody>
       </table>
     </form>
-<!-- 🧨 Modal Hapus BULK Surat Tugas -->
-<div class="modal fade" id="modalBulkDeleteTugas" tabindex="-1" aria-labelledby="modalBulkDeleteTugasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-white border-danger">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalBulkDeleteTugasLabel">Konfirmasi Hapus</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <!-- 🧨 Modal Hapus BULK Surat Tugas -->
+    <div class="modal fade" id="modalBulkDeleteTugas" tabindex="-1" aria-labelledby="modalBulkDeleteTugasLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-danger">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalBulkDeleteTugasLabel">Konfirmasi Hapus</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            🗑️ <strong>Hapus Item yg Dipilih?</strong>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="confirmBulkDeleteTugas">Ya, Hapus</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        🗑️ <strong>Hapus Item yg Dipilih?</strong>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" id="confirmBulkDeleteTugas">Ya, Hapus</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+    </div>
+
+  </div>
+
+  <?= view('surattugas/modal_edit') ?>
+
+  <!-- 🧨 Modal Hapus Surat Tugas -->
+  <div class="modal fade" id="modalHapusSuratTugas" tabindex="-1" aria-labelledby="modalHapusSuratTugasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white border-danger">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalHapusSuratTugasLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="hapusTugasModalBody">
+          <!-- Diisi dinamis oleh JS -->
+        </div>
+        <div class="modal-footer">
+          <form id="formHapusSuratTugas" action="#" method="post">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-</div>
-
-<?= view('surattugas/modal_edit') ?>
-
-<!-- 🧨 Modal Hapus Surat Tugas -->
-<div class="modal fade" id="modalHapusSuratTugas" tabindex="-1" aria-labelledby="modalHapusSuratTugasLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-white border-danger">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalHapusSuratTugasLabel">Konfirmasi Hapus</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="hapusTugasModalBody">
-        <!-- Diisi dinamis oleh JS -->
-      </div>
-      <div class="modal-footer">
-        <form id="formHapusSuratTugas" action="#" method="post">
-          <?= csrf_field() ?>
-          <button type="submit" class="btn btn-danger">Ya, Hapus</button>
-        </form>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php $this->section('scripts'); ?>
-<style>
-  .bulkdelete-anim {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
-    pointer-events: none;
-  }
-  .bulkdelete-anim.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-</style>
-
-<script>
-  // Checkbox select all & enable bulk delete Surat Tugas
-  document.addEventListener('DOMContentLoaded', function () {
-    const selectAll = document.getElementById('selectAllTugas');
-    const btnBulkDelete = document.getElementById('btnBulkDeleteTugas');
-    const confirmBulkDelete = document.getElementById('confirmBulkDeleteTugas');
-    function getRowCheckboxes() {
-      return document.querySelectorAll('.rowCheckboxTugas');
+  <?php $this->section('scripts'); ?>
+  <style>
+    .bulkdelete-anim {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s cubic-bezier(.4, 0, .2, 1), transform 0.3s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
     }
-    function updateBulkDeleteVisibility() {
-      const rowCheckboxes = getRowCheckboxes();
-      const checked = Array.from(rowCheckboxes).some(cb => cb.checked);
-      // Smooth animation
-      if (checked) {
-        btnBulkDelete.classList.remove('d-none');
-        btnBulkDelete.classList.add('show');
-      } else {
-        btnBulkDelete.classList.remove('show');
-        // Delay d-none agar animasi sempat jalan
-        setTimeout(() => {
-          if (!btnBulkDelete.classList.contains('show')) {
-            btnBulkDelete.classList.add('d-none');
-          }
-        }, 300);
+
+    .bulkdelete-anim.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  </style>
+
+  <script>
+    // Checkbox select all & enable bulk delete Surat Tugas
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAll = document.getElementById('selectAllTugas');
+      const btnBulkDelete = document.getElementById('btnBulkDeleteTugas');
+      const confirmBulkDelete = document.getElementById('confirmBulkDeleteTugas');
+
+      function getRowCheckboxes() {
+        return document.querySelectorAll('.rowCheckboxTugas');
       }
-      // Disable semua tombol hapus di kolom aksi jika ada yang dicentang
-      document.querySelectorAll('.btn-hapus-surattugas').forEach(btn => {
-        btn.disabled = checked;
-        btn.classList.toggle('opacity-50', checked);
-        btn.classList.toggle('pointer-events-none', checked);
-      });
-    }
-    if (selectAll) {
-      selectAll.addEventListener('change', function () {
+
+      function updateBulkDeleteVisibility() {
         const rowCheckboxes = getRowCheckboxes();
-        rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);
-        updateBulkDeleteVisibility();
-      });
-    }
-    function attachRowCheckboxListeners() {
-      const rowCheckboxes = getRowCheckboxes();
-      rowCheckboxes.forEach(cb => {
-        cb.addEventListener('change', function () {
-          const allChecked = Array.from(getRowCheckboxes()).every(cb => cb.checked);
-          selectAll.checked = allChecked;
+        const checked = Array.from(rowCheckboxes).some(cb => cb.checked);
+        // Smooth animation
+        if (checked) {
+          btnBulkDelete.classList.remove('d-none');
+          btnBulkDelete.classList.add('show');
+        } else {
+          btnBulkDelete.classList.remove('show');
+          // Delay d-none agar animasi sempat jalan
+          setTimeout(() => {
+            if (!btnBulkDelete.classList.contains('show')) {
+              btnBulkDelete.classList.add('d-none');
+            }
+          }, 300);
+        }
+        // Disable semua tombol hapus di kolom aksi jika ada yang dicentang
+        document.querySelectorAll('.btn-hapus-surattugas').forEach(btn => {
+          btn.disabled = checked;
+          btn.classList.toggle('opacity-50', checked);
+          btn.classList.toggle('pointer-events-none', checked);
+        });
+      }
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          const rowCheckboxes = getRowCheckboxes();
+          rowCheckboxes.forEach(cb => cb.checked = selectAll.checked);
           updateBulkDeleteVisibility();
         });
-      });
-    }
-    attachRowCheckboxListeners();
-    updateBulkDeleteVisibility();
-    if (confirmBulkDelete) {
-      confirmBulkDelete.addEventListener('click', function () {
-        document.getElementById('formBulkDeleteTugas').submit();
-      });
-    }
-    updateBulkDeleteVisibility();
-  });
-  // Modal Edit & Hapus Surat Tugas (khusus modal, bukan search/pagination)
-  document.addEventListener('DOMContentLoaded', function() {
-    // Modal Edit (isi otomatis modal_edit.php)
-    const modalEdit = document.getElementById('modalEditSuratTugas');
-    if (modalEdit) {
-      modalEdit.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        document.getElementById('formEditSuratTugas').setAttribute('action', '/surattugas/update/' + button.getAttribute('data-id'));
-        document.getElementById('edit_id_tugas').value = button.getAttribute('data-id');
-        document.getElementById('edit_nomor_surat_tugas').value = button.getAttribute('data-nomor');
-        document.getElementById('edit_tujuan_tugas').value = button.getAttribute('data-tujuan');
-        // Set tanggal (flatpickr dan input)
-        const tanggal = button.getAttribute('data-tanggal') || '';
-        document.getElementById('edit_tanggal_tugas').value = tanggal;
-        if (window.flatpickrEditTugas) {
-          window.flatpickrEditTugas.setDate(tanggal, true);
-        }
-        document.getElementById('edit_perihal_tugas').value = button.getAttribute('data-perihal');
-        // Tampilkan file lama jika ada
-        const fileLama = button.getAttribute('data-file') || '';
-        const fileLamaDiv = document.getElementById('edit_fileLama_tugas');
-        if (fileLama) {
-          const fileUrl = `/uploads/surattugas/${fileLama}`;
-          fileLamaDiv.innerHTML = `File lama: <a href='${fileUrl}' target='_blank' class='text-info text-decoration-underline'>Lihat File</a>`;
-        } else {
-          fileLamaDiv.innerHTML = '';
-        }
-        // Reset preview file baru
-        const previewFile = document.getElementById('edit_filePreview_tugas');
-        if (previewFile) previewFile.innerHTML = '';
-      });
-    }
-    // Modal Hapus
-    const modalHapus = document.getElementById('modalHapusSuratTugas');
-    if (modalHapus) {
-      modalHapus.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const id = button.getAttribute('data-id');
-        const tujuan = button.getAttribute('data-tujuan');
-        const nomor = button.getAttribute('data-nomor');
-        const actionUrl = button.getAttribute('data-action');
-        const modalBody = document.getElementById('hapusTugasModalBody');
-        modalBody.innerHTML = `🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>Nomor: <strong>${nomor}</strong>`;
-        document.getElementById('formHapusSuratTugas').setAttribute('action', actionUrl);
-      });
-    }
-  });
-</script>
+      }
 
-<?php $this->endSection(); ?>
-<?= $this->endSection() ?>
+      function attachRowCheckboxListeners() {
+        const rowCheckboxes = getRowCheckboxes();
+        rowCheckboxes.forEach(cb => {
+          cb.addEventListener('change', function() {
+            const allChecked = Array.from(getRowCheckboxes()).every(cb => cb.checked);
+            selectAll.checked = allChecked;
+            updateBulkDeleteVisibility();
+          });
+        });
+      }
+      attachRowCheckboxListeners();
+      updateBulkDeleteVisibility();
+      if (confirmBulkDelete) {
+        confirmBulkDelete.addEventListener('click', function() {
+          document.getElementById('formBulkDeleteTugas').submit();
+        });
+      }
+      updateBulkDeleteVisibility();
+    });
+    // Modal Edit & Hapus Surat Tugas (khusus modal, bukan search/pagination)
+    document.addEventListener('DOMContentLoaded', function() {
+      // Modal Edit (isi otomatis modal_edit.php)
+      const modalEdit = document.getElementById('modalEditSuratTugas');
+      if (modalEdit) {
+        modalEdit.addEventListener('show.bs.modal', function(event) {
+          const button = event.relatedTarget;
+          document.getElementById('formEditSuratTugas').setAttribute('action', '/surattugas/update/' + button.getAttribute('data-id'));
+          document.getElementById('edit_id_tugas').value = button.getAttribute('data-id');
+          document.getElementById('edit_nomor_surat_tugas').value = button.getAttribute('data-nomor');
+          document.getElementById('edit_tujuan_tugas').value = button.getAttribute('data-tujuan');
+          // Set tanggal (flatpickr dan input)
+          const tanggal = button.getAttribute('data-tanggal') || '';
+          document.getElementById('edit_tanggal_tugas').value = tanggal;
+          if (window.flatpickrEditTugas) {
+            window.flatpickrEditTugas.setDate(tanggal, true);
+          }
+          document.getElementById('edit_perihal_tugas').value = button.getAttribute('data-perihal');
+          // Tampilkan file lama jika ada
+          const fileLama = button.getAttribute('data-file') || '';
+          const fileLamaDiv = document.getElementById('edit_fileLama_tugas');
+          if (fileLama) {
+            const fileUrl = `/uploads/surattugas/${fileLama}`;
+            fileLamaDiv.innerHTML = `File lama: <a href='${fileUrl}' target='_blank' class='text-info text-decoration-underline'>Lihat File</a>`;
+          } else {
+            fileLamaDiv.innerHTML = '';
+          }
+          // Reset preview file baru
+          const previewFile = document.getElementById('edit_filePreview_tugas');
+          if (previewFile) previewFile.innerHTML = '';
+        });
+      }
+      // Modal Hapus 
+      const modalHapus = document.getElementById('modalHapusSuratTugas');
+      if (modalHapus) {
+        modalHapus.addEventListener('show.bs.modal', function(event) {
+          const button = event.relatedTarget;
+          const id = button.getAttribute('data-id');
+          const tujuan = button.getAttribute('data-tujuan');
+          const nomor = button.getAttribute('data-nomor');
+          const actionUrl = button.getAttribute('data-action');
+          const modalBody = document.getElementById('hapusTugasModalBody');
+          modalBody.innerHTML = `🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>Nomor: <strong>${nomor}</strong>`;
+          document.getElementById('formHapusSuratTugas').setAttribute('action', actionUrl);
+        });
+      }
+    });
+  </script>
+
+  <?php $this->endSection(); ?>
+  <?= $this->endSection() ?>

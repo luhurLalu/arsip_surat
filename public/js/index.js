@@ -151,53 +151,42 @@ if (formEditMasuk && editButtonsMasuk.length > 0) {
 }
 
 // --- Handler hapus surat keluar ---
-const hapusButtons = document.querySelectorAll('.btn-hapus-suratkeluar');
-const hapusModal = document.getElementById('modalHapusSuratKeluar');
-const hapusModalBody = document.getElementById('hapusModalBody');
-const formHapus = document.getElementById('formHapusSuratKeluar');
-if (hapusButtons.length > 0 && hapusModal && hapusModalBody && formHapus) {
-  hapusButtons.forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      const editModal = document.getElementById('modalEditSuratKeluar');
-      if (editModal && editModal.classList.contains('show')) {
-        const instance = bootstrap.Modal.getInstance(editModal);
-        if (instance) instance.hide();
-      }
-      const tambahModal = document.getElementById('modalTambahSuratKeluar');
-      if (tambahModal && tambahModal.classList.contains('show')) {
-        const instance = bootstrap.Modal.getInstance(tambahModal);
-        if (instance) instance.hide();
-      }
-      hapusModalBody.innerHTML = `🗑️ Hapus surat ke <strong>${this.dataset.tujuan}</strong>?<br>Nomor: <strong>${this.dataset.nomor}</strong>`;
-      formHapus.action = this.dataset.action;
-      // Biarkan Bootstrap yang handle modal
-    });
-  });
-}
+// document.addEventListener('DOMContentLoaded', function () {
+//   // Handler hapus surat keluar (modular, mirip surat tugas)
+//   const hapusModal = document.getElementById('modalHapusSuratKeluar');
+//   if (hapusModal) {
+//     hapusModal.addEventListener('show.bs.modal', function (event) {
+//       const button = event.relatedTarget;
+//       if (!button) return;
+//       const id = button.getAttribute('data-id');
+//       const tujuan = button.getAttribute('data-tujuan');
+//       const nomor = button.getAttribute('data-nomor');
+//       const actionUrl = button.getAttribute('data-action');
+//       const modalBody = document.getElementById('hapusModalBody');
+//       modalBody.innerHTML = `🗑️ Hapus surat ke <strong>${tujuan}</strong>?<br>Nomor: <strong>${nomor}</strong>`;
+//       document.getElementById('formHapusSuratKeluar').setAttribute('action', actionUrl);
+//     });
+//   }
+// });
 
 // --- Handler hapus surat masuk ---
-const hapusMasukButtons = document.querySelectorAll('.btn-hapus-suratmasuk');
-const hapusMasukModal = document.getElementById('modalHapusSuratMasuk');
-const hapusMasukModalBody = document.getElementById('hapusMasukModalBody');
-const formHapusMasuk = document.getElementById('formHapusSuratMasuk');
-if (hapusMasukButtons.length > 0 && hapusMasukModal && hapusMasukModalBody && formHapusMasuk) {
-  hapusMasukButtons.forEach(btn => {
-    btn.addEventListener('click', function () {
-      const editModal = document.getElementById('modalEditSuratMasuk');
-      if (editModal && editModal.classList.contains('show')) {
-        const instance = bootstrap.Modal.getInstance(editModal);
-        if (instance) instance.hide();
-      }
-      const tambahModal = document.getElementById('modalTambahSurat');
-      if (tambahModal && tambahModal.classList.contains('show')) {
-        const instance = bootstrap.Modal.getInstance(tambahModal);
-        if (instance) instance.hide();
-      }
-      hapusMasukModalBody.innerHTML = `🗑️ Hapus surat dari <strong>${this.dataset.pengirim}</strong>?<br>Nomor: <strong>${this.dataset.nomor}</strong>`;
-      formHapusMasuk.action = this.dataset.action;
+document.addEventListener('DOMContentLoaded', function () {
+  // Handler hapus surat masuk (modular, mirip surat tugas)
+  const hapusMasukModal = document.getElementById('modalHapusSuratMasuk');
+  if (hapusMasukModal) {
+    hapusMasukModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      if (!button) return;
+      const id = button.getAttribute('data-id');
+      const pengirim = button.getAttribute('data-pengirim');
+      const nomor = button.getAttribute('data-nomor');
+      const actionUrl = button.getAttribute('data-action');
+      const modalBody = document.getElementById('hapusMasukModalBody');
+      modalBody.innerHTML = `🗑️ Hapus surat dari <strong>${pengirim}</strong>?<br>Nomor: <strong>${nomor}</strong>`;
+      document.getElementById('formHapusSuratMasuk').setAttribute('action', actionUrl);
     });
-  });
-}
+  }
+});
 
 // --- Fungsi tanggal edit surat keluar ---
 function setTanggalEditSuratKeluar(tanggal) {
