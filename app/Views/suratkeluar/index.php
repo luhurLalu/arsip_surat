@@ -1,23 +1,6 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<style>
-    /* Tombol Hapus Terpilih animasi smooth dan keren, sama seperti surat masuk */
-    /* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas */
-    .bulkdelete-anim {
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: opacity 0.3s cubic-bezier(.4, 0, .2, 1), transform 0.3s cubic-bezier(.4, 0, .2, 1);
-        pointer-events: none;
-    }
-
-    .bulkdelete-anim.show {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-</style>
-
 <div class="container mt-3">
     <!-- ✅ Toast Notification -->
     <div class="position-fixed top-0 end-0 p-3 toast-z">
@@ -131,14 +114,14 @@
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
                                     <a href="<?= base_url('uploads/suratkeluar/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
-                                    <button class="btn btn-danger btn-sm text-white btn-hapus-suratkeluar"
-                                        data-id="<?= $s['id'] ?>"
-                                        data-tujuan="<?= esc($s['tujuan']) ?>"
-                                        data-nomor="<?= esc($s['nomor_surat']) ?>"
-                                        data-action="<?= base_url('suratkeluar/delete/' . $s['id']) ?>"
-                                        data-bs-toggle="modal" data-bs-target="#modalHapusSuratKeluar">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
+<button type="button" class="btn btn-danger btn-sm text-white btn-hapus-suratkeluar"
+    data-id="<?= $s['id'] ?>"
+    data-tujuan="<?= esc($s['tujuan']) ?>"
+    data-nomor="<?= esc($s['nomor_surat']) ?>"
+    data-action="<?= base_url('suratkeluar/delete/' . $s['id']) ?>"
+    data-bs-toggle="modal" data-bs-target="#modalHapusSuratKeluar">
+    <i class="bi bi-trash-fill"></i>
+</button>
                                 </div>
                             </td>
                         </tr>
@@ -197,7 +180,24 @@
     </div>
 </div>
 
-<!-- 🔌 Panggil JS modular -->
+
+<?php $this->section('scripts'); ?>
+<style>
+    /* Tombol Hapus Terpilih animasi smooth dan keren, sama seperti surat masuk */
+    /* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas */
+    .bulkdelete-anim {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s cubic-bezier(.4, 0, .2, 1), transform 0.3s cubic-bezier(.4, 0, .2, 1);
+        pointer-events: none;
+    }
+
+    .bulkdelete-anim.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+</style>
 <script>
     // Checkbox select all & enable bulk delete Surat Keluar
     document.addEventListener('DOMContentLoaded', function() {
@@ -316,5 +316,5 @@
         }
     });
 </script>
-
+<?php $this->endSection(); ?>
 <?= $this->endSection() ?>

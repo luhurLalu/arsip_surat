@@ -1,20 +1,5 @@
 
 <?= $this->extend('layout/main') ?>
-<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
-<style>
-/* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas dan keluar */
-.bulkdelete-anim {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
-    pointer-events: none;
-}
-.bulkdelete-anim.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-</style>
 <?= $this->section('content') ?>
 
 <div class="container mt-3">
@@ -135,14 +120,14 @@
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
                             <a href="<?= base_url('uploads/suratmasuk/' . $s['file_surat']) ?>" class="btn btn-secondary btn-sm text-white" download><i class="bi bi-download"></i></a>
-                            <button class="btn btn-danger btn-sm text-white btn-hapus-suratmasuk"
-                                data-id="<?= $s['id'] ?>"
-                                data-pengirim="<?= esc($s['pengirim']) ?>"
-                                data-nomor="<?= esc($s['nomor_surat']) ?>"
-                                data-action="<?= base_url('suratmasuk/delete/' . $s['id']) ?>"
-                                data-bs-toggle="modal" data-bs-target="#modalHapusSuratMasuk">
-                                <i class="bi bi-trash-fill"></i>
-                            </button>
+<button type="button" class="btn btn-danger btn-sm text-white btn-hapus-suratmasuk"
+    data-id="<?= $s['id'] ?>"
+    data-pengirim="<?= esc($s['pengirim']) ?>"
+    data-nomor="<?= esc($s['nomor_surat']) ?>"
+    data-action="<?= base_url('suratmasuk/delete/' . $s['id']) ?>"
+    data-bs-toggle="modal" data-bs-target="#modalHapusSuratMasuk">
+    <i class="bi bi-trash-fill"></i>
+</button>
                         </div>
                     </td>
                 </tr>
@@ -187,8 +172,22 @@
   </div>
 </div>
 
-<!-- 🔌 Panggil JS modular -->
-
+<?php $this->section('scripts'); ?>
+<link rel="stylesheet" href="<?= base_url('css/style.css') ?>">
+<style>
+/* Efek transisi tombol Hapus Terpilih konsisten seperti surat tugas dan keluar */
+.bulkdelete-anim {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+}
+.bulkdelete-anim.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+</style>
 <script>
     // Checkbox select all & enable bulk delete
     document.addEventListener('DOMContentLoaded', function () {
@@ -258,5 +257,5 @@
         });
     }); 
 </script>
-
+<?php $this->endSection(); ?>
 <?= $this->endSection() ?>
